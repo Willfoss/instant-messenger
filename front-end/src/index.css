@@ -1,0 +1,19 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+}
+
+:root {
+  --primary-text-colour: #fff;
+  --primary-background-colour: #1c1e21;
+  --secondary-background-colour: #2a2e35;
+}
+
+main {
+  height: 100dvh;
+  width: 100%;
+  background-color: var(--primary-background-colour);
+  padding: 1rem;
+}
