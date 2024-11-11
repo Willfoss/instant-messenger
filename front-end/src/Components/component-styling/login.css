@@ -36,6 +36,7 @@ input,
 .login-button {
   margin-top: 1em;
   background-color: #25d366;
+  font-weight: bold;
 }
 
 input {
@@ -65,9 +66,17 @@ input:focus::placeholder {
   font-size: 2em;
 }
 
+.to-signup {
+  font-weight: bold;
+}
+
 .to-signup,
 .login-text {
   color: var(--primary-text-colour);
+}
+
+.link {
+  text-decoration: none;
 }
 
 .to-signup:hover,

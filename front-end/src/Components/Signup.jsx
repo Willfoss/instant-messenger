@@ -64,8 +64,8 @@ export default function Signup() {
               onChange={handlePasswordChange}
             ></input>
           </label>
-          <button className="signup-button">Log in</button>
-          <Link to="/login">
+          <button className="signup-button">Sign up</button>
+          <Link className="link" to="/">
             <p className="to-login"> Already a user? Log in!</p>
           </Link>
         </form>

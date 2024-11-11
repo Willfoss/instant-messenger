@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./component-styling/login.css";
+import { Link } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -37,7 +38,9 @@ export default function Login() {
             ></input>
           </label>
           <button className="login-button">Log in</button>
-          <p className="to-signup"> Not a user? sign up here!</p>
+          <Link className="link" to="/signup">
+            <p className="to-signup"> Not a user? sign up here!</p>
+          </Link>
         </form>
       </div>
     </section>
