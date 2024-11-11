@@ -12,7 +12,8 @@
 }
 
 main {
-  height: 100dvh;
+  display: flex;
+  min-height: 100dvh;
   width: 100%;
   background-color: var(--primary-background-colour);
   padding: 1rem;
