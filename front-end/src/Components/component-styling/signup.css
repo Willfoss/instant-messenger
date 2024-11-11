@@ -67,12 +67,12 @@ input:focus::placeholder {
   font-size: 2em;
 }
 
-.to-signup,
+.to-login,
 .signup-text {
   color: var(--primary-text-colour);
 }
 
-.to-signup:hover,
+.to-login:hover,
 .signup-button {
   cursor: pointer;
 }
