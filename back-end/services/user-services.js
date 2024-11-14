@@ -1,5 +1,6 @@
 const { User } = require("../models/user-model");
 const bcrypt = require("bcrypt");
+const generateToken = require("../config/generateToken");
 
 function addNewUser(name, email, password, picture) {
   const hashedPassword = bcrypt.hashSync(password, 10);
@@ -23,7 +24,11 @@ function addNewUser(name, email, password, picture) {
     if (user) {
       return Promise.reject({ status: 200, message: "A user already exists with that email address. Please log in or try again" });
     } else {
-      return newUser.save().then(user);
+      return newUser.save().then((user) => {
+        const response = { ...user };
+        response._doc.token = "hello";
+        return response._doc;
+      });
     }
   });
 }

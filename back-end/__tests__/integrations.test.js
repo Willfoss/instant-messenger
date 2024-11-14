@@ -50,6 +50,15 @@ describe("back end testing", () => {
           expect(body.user.password).not.toBe("hello");
         });
     });
+    test("POST new user 201: adding a user generates a jwt for authentication", () => {
+      return request(app)
+        .post("/api/users")
+        .send({ name: "Jeff B", email: "jeffyB@amazon.com", password: "hello", age: 54 })
+        .expect(201)
+        .then(({ body }) => {
+          expect(typeof body.user.token).toBe("string");
+        });
+    });
     test("POST new user 200: if the user tries to register with an existing email they will be informed", () => {
       return request(app)
         .post("/api/users")
