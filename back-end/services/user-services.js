@@ -8,6 +8,10 @@ function addNewUser(name, email, password, picture) {
     return Promise.reject({ status: 400, message: "Bad Request: name, email and password are all required" });
   }
 
+  if (typeof name !== "string" || typeof email !== "string" || typeof password !== "string") {
+    return Promise.reject({ status: 400, message: "Bad Request: Incorrect datatype provided" });
+  }
+
   newUser = new User({
     name,
     email,

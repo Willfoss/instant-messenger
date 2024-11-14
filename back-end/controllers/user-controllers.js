@@ -8,7 +8,6 @@ function postNewUser(request, response, next) {
       response.status(201).send({ user });
     })
     .catch((error) => {
-      console.log(error);
       next(error);
     });
 }

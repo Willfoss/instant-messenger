@@ -7,7 +7,6 @@ const seed = async () => {
 
   const users = await User.insertMany(userTestData.users, { runValidators: true });
 
-  console.log("seeded successfully");
   return { users };
 };
 

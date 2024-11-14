@@ -71,10 +71,9 @@ describe("back end testing", () => {
     test("POST new user 400: responds with a bad request error if required information is the wrong data type", () => {
       return request(app)
         .post("/api/users")
-        .send({ name: 1234, email: "jeffyB@amazon.com", password: "hello", age: 54 })
+        .send({ name: {}, email: "jeffyB@amazon.com", password: "hello", age: 54 })
         .expect(400)
         .then(({ body }) => {
-          console.log(body);
           expect(body.message).toBe("Bad Request: Incorrect datatype provided");
         });
     });
