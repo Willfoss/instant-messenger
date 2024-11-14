@@ -9,12 +9,17 @@
   --primary-text-colour: #fff;
   --primary-background-colour: #1c1e21;
   --secondary-background-colour: #2a2e35;
+  --brand-colour: #25d366;
+  --header-height: 75px;
+}
+
+body {
+  background-color: var(--primary-background-colour);
 }
 
 main {
   display: flex;
-  min-height: 100dvh;
+  min-height: calc(100dvh - var(--header-height));
   width: 100%;
-  background-color: var(--primary-background-colour);
-  padding: 1rem;
+  padding: 0rem 1rem;
 }

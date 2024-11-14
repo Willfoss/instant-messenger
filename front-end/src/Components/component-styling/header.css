@@ -1,0 +1,19 @@
+.logo {
+  color: var(--brand-colour);
+  width: 3em;
+  height: 3em;
+}
+
+.logo-heading {
+  color: white;
+  font-size: 3em;
+}
+
+#header {
+  display: flex;
+  align-items: center;
+  height: 75px;
+  width: 100%;
+  gap: 1em;
+  padding-left: 2em;
+}

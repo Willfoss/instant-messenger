@@ -9,9 +9,14 @@
 .signup-form {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+
   align-items: center;
   width: 100%;
+}
+
+.signup-container {
+  justify-content: flex-start;
+  margin-top: 2em;
 }
 
 .signup-form {
@@ -25,7 +30,7 @@ label {
   width: 100%;
 }
 
-input,
+.text-input,
 .signup-button {
   border: none;
   border-radius: 0.3em;
@@ -40,13 +45,13 @@ input,
   font-weight: bold;
 }
 
-input {
+.text-input {
   background-color: var(--secondary-background-colour);
   padding: 0em 1em;
   margin-top: 0.5em;
 }
 
-input:focus {
+.text-input:focus {
   outline: solid 3px #25d366;
 }
 
@@ -64,7 +69,7 @@ input:focus::placeholder {
 
 .signup-header {
   color: var(--primary-text-colour);
-  margin-bottom: 2em;
+  margin-bottom: 1em;
   font-size: 2em;
 }
 
@@ -81,4 +86,28 @@ input:focus::placeholder {
 .to-login:hover,
 .signup-button {
   cursor: pointer;
+}
+
+input::file-selector-button {
+  background-color: var(--secondary-background-colour);
+  border: none;
+  border-radius: 0.3em;
+  height: 3em;
+  width: 30%;
+  font-size: 1em;
+  color: #fff;
+}
+
+input::file-selector-button:hover {
+  cursor: pointer;
+}
+
+.image-uploader {
+  margin-top: 0.5em;
+}
+
+@media screen and (min-width: 768px) {
+  .signup-container {
+    justify-content: center;
+  }
 }

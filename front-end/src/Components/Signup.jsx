@@ -3,18 +3,14 @@ import "./component-styling/signup.css";
 import { Link } from "react-router-dom";
 
 export default function Signup() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [file, setFile] = useState("");
 
-  function handleFirstNameChange(event) {
-    setFirstName(event.target.value);
-  }
-
-  function handleLastNameChange(event) {
-    setLastName(event.target.value);
+  function handleNameChange(event) {
+    setName(event.target.value);
   }
 
   function handleEmailChange(event) {
@@ -29,6 +25,10 @@ export default function Signup() {
     setConfirmPassword(event.target.value);
   }
 
+  function handleFileChange(event) {
+    console.log(event.target.value);
+  }
+
   function handleSignupSubmit(event) {
     event.preventDefault();
   }
@@ -38,31 +38,31 @@ export default function Signup() {
       <div className="signup-container">
         <form onSubmit={handleSignupSubmit} className="signup-form">
           <h2 className="signup-header">Sign Up for Free</h2>
-          <label className="signup-text" htmlFor="firstname">
-            First Name
-            <input className="signup-text" name="firstname" type="text" value={firstName} onChange={handleFirstNameChange}></input>
+          <label className="signup-text" htmlFor="name">
+            Name
+            <input className="signup-text text-input" name="name" type="text" value={name} onChange={handleNameChange}></input>
           </label>
-          <label className="signup-text" htmlFor="lastname">
-            Last Name
-            <input className="signup-text" name="lastname" type="text" value={lastName} onChange={handleLastNameChange}></input>
-          </label>
-          <label className="signup-text" htmlFor="email">
+          <label className="signup-text " htmlFor="email">
             Email Address
-            <input className="signup-text" name="email" type="email" value={email} onChange={handleEmailChange}></input>
+            <input className="signup-text text-input" name="email" type="email" value={email} onChange={handleEmailChange}></input>
           </label>
           <label className="signup-text" htmlFor="password">
             Password
-            <input className="signup-text" name="password" type="password" value={password} onChange={handleConfirmPasswordChange}></input>
+            <input className="signup-text text-input" name="password" type="password" value={password} onChange={handleConfirmPasswordChange}></input>
           </label>
           <label className="signup-text" htmlFor="confirm-password">
             Confirm Password
             <input
-              className="signup-text"
+              className="signup-text text-input"
               name="confirm-password"
               type="confirm-password"
               value={confirmPassword}
               onChange={handlePasswordChange}
             ></input>
+          </label>
+          <label className="signup-text" htmlFor="profile-picture">
+            Upload your file
+            <input className="image-uploader" type="file" name="profile-picture" accept="image/*" value={file} onChange={handleFileChange}></input>
           </label>
           <button className="signup-button">Sign up</button>
           <Link className="link" to="/">

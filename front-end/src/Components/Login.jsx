@@ -25,11 +25,11 @@ export default function Login() {
         <form onSubmit={handleLoginFormSubmit} className="login-form">
           <h2 className="login-header">Log in</h2>
           <label htmlFor="email">
-            <input className="login-text" name="email" type="email" value={email} onChange={handleEmailChange} placeholder="Email"></input>
+            <input className="login-text text-input" name="email" type="email" value={email} onChange={handleEmailChange} placeholder="Email"></input>
           </label>
           <label htmlFor="password">
             <input
-              className="login-text"
+              className="login-text text-input"
               name="password"
               type="password"
               value={password}
