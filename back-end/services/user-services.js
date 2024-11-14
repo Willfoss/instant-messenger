@@ -15,7 +15,9 @@ function addNewUser(name, email, password, picture) {
     picture,
   });
 
-  return newUser.save();
+  return newUser.save().then((user) => {
+    return user;
+  });
 }
 
 module.exports = { addNewUser };
