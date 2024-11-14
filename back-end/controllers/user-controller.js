@@ -1,4 +1,4 @@
-const { usersModel } = require("../models/user-model");
+const { User } = require("../models/user-model");
 const bcrypt = require("bcrypt");
 
 function postNewUser(request, response, next) {
@@ -7,7 +7,7 @@ function postNewUser(request, response, next) {
   const hashedPassword = bcrypt.hashSync(password, 10);
   console.log(firstName, lastName, email, password);
 
-  const newUser = new usersModel({
+  const newUser = new User({
     firstName,
     lastName,
     email,
