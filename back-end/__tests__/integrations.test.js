@@ -41,6 +41,24 @@ describe("back end testing", () => {
           expect(body.user.hasOwnProperty("age")).toBe(false);
         });
     });
+    test("POST new user 201: the password is stored as a secured hash", () => {
+      return request(app)
+        .post("/api/users")
+        .send({ name: "Jeff B", email: "jeffyB@amazon.com", password: "hello", age: 54 })
+        .expect(201)
+        .then(({ body }) => {
+          expect(body.user.password).not.toBe("hello");
+        });
+    });
+    test("POST new user 200: if the user tries to register with an existing email they will be informed", () => {
+      return request(app)
+        .post("/api/users")
+        .send({ name: "will", email: "willfossard@outlook.com", password: "hello", age: 54 })
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.message).toBe("A user already exists with that email address. Please log in or try again");
+        });
+    });
     test("POST new user 400: responds with a bad request error if missing required information", () => {
       return request(app)
         .post("/api/users")
@@ -48,6 +66,16 @@ describe("back end testing", () => {
         .expect(400)
         .then(({ body }) => {
           expect(body.message).toBe("Bad Request: name, email and password are all required");
+        });
+    });
+    test("POST new user 400: responds with a bad request error if required information is the wrong data type", () => {
+      return request(app)
+        .post("/api/users")
+        .send({ name: 1234, email: "jeffyB@amazon.com", password: "hello", age: 54 })
+        .expect(400)
+        .then(({ body }) => {
+          console.log(body);
+          expect(body.message).toBe("Bad Request: Incorrect datatype provided");
         });
     });
   });

@@ -8,15 +8,19 @@ function addNewUser(name, email, password, picture) {
     return Promise.reject({ status: 400, message: "Bad Request: name, email and password are all required" });
   }
 
-  const newUser = new User({
+  newUser = new User({
     name,
     email,
     password: hashedPassword,
     picture,
   });
 
-  return newUser.save().then((user) => {
-    return user;
+  return User.findOne({ email }).then((user) => {
+    if (user) {
+      return Promise.reject({ status: 200, message: "A user already exists with that email address. Please log in or try again" });
+    } else {
+      return newUser.save().then(user);
+    }
   });
 }
 
