@@ -11,7 +11,7 @@ afterAll(() => {
 });
 
 describe("back end testing", () => {
-  describe("user testing", () => {
+  describe("register new user testing", () => {
     test("POST new user 201: responds with a the user that was just created", () => {
       return request(app)
         .post("/api/users")
@@ -85,6 +85,60 @@ describe("back end testing", () => {
         .expect(400)
         .then(({ body }) => {
           expect(body.message).toBe("Bad Request: Incorrect datatype provided");
+        });
+    });
+  });
+  describe.only("sign in and authorise user testing", () => {
+    test("POST login 201: returns the user object that has just signed in if email and password are correct", () => {
+      return request(app)
+        .post("/api/users/login")
+        .send({ email: "willfossard@outlook.com", password: "password123" })
+        .expect(201)
+        .then(({ body }) => {
+          expect(body.user).toMatchObject({
+            _id: expect.any(String),
+            name: "will fossard",
+            email: "willfossard@outlook.com",
+            password: expect.any(String),
+            picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+            token: expect.any(String),
+          });
+        });
+    });
+    test("POST login 201: any additional information is ignored in a post request", () => {
+      return request(app)
+        .post("/api/users/login")
+        .send({ email: "willfossard@outlook.com", password: "password123", age: 99 })
+        .expect(201)
+        .then(({ body }) => {
+          expect(body.user.hasOwnProperty("age")).toBe(false);
+        });
+    });
+    test("POST login 401: responds with an unauthorised message if the user attempts to log in and does not match valid email address", () => {
+      return request(app)
+        .post("/api/users/login")
+        .send({ email: "invalidemail@invalidemail.com", password: "password" })
+        .expect(401)
+        .then(({ body }) => {
+          expect(body.message).toBe("Invalid email address or password");
+        });
+    });
+    test("POST login 401: responds with an unauthorised message if the user attempts to log in and provides an incorrect pasword", () => {
+      return request(app)
+        .post("/api/users/login")
+        .send({ email: "willfossard@outlook.com", password: "wrongPassword" })
+        .expect(401)
+        .then(({ body }) => {
+          expect(body.message).toBe("Invalid email address or password");
+        });
+    });
+    test("Post login 400: responds with a bad request message if all the data is not provided in the login", () => {
+      return request(app)
+        .post("/api/users/login")
+        .send({ email: "willfossard@outlook.com" })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe("Both email and password are required");
         });
     });
   });

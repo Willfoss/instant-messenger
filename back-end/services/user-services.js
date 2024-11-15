@@ -26,11 +26,32 @@ function addNewUser(name, email, password, picture) {
     } else {
       return newUser.save().then((user) => {
         const response = { ...user };
-        response._doc.token = "hello";
+        response._doc.token = generateToken(user._id);
         return response._doc;
       });
     }
   });
 }
 
-module.exports = { addNewUser };
+function authUser(email, password) {
+  if (!email || !password) {
+    return Promise.reject({ status: 400, message: "Both email and password are required" });
+  }
+
+  return User.findOne({ email }).then((user) => {
+    if (!user) {
+      return Promise.reject({ status: 401, message: "Invalid email address or password" });
+    }
+    return Promise.all([user, bcrypt.compare(password, user.password)]).then(([user, isPasswordAmatch]) => {
+      if (user && isPasswordAmatch === true) {
+        const response = { ...user };
+        response._doc.token = generateToken(user._id);
+        return response._doc;
+      } else {
+        return Promise.reject({ status: 401, message: "Invalid email address or password" });
+      }
+    });
+  });
+}
+
+module.exports = { addNewUser, authUser };

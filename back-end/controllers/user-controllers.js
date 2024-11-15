@@ -1,4 +1,4 @@
-const { addNewUser } = require("../services/user-services");
+const { addNewUser, authUser } = require("../services/user-services");
 const bcrypt = require("bcrypt");
 
 function postNewUser(request, response, next) {
@@ -12,4 +12,15 @@ function postNewUser(request, response, next) {
     });
 }
 
-module.exports = { postNewUser };
+function loginUser(request, response, next) {
+  const { email, password } = request.body;
+  authUser(email, password)
+    .then((user) => {
+      response.status(201).send({ user });
+    })
+    .catch((error) => {
+      next(error);
+    });
+}
+
+module.exports = { postNewUser, loginUser };
