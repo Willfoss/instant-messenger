@@ -8,6 +8,10 @@ app.use(express.json());
 
 app.use("/api", apiRouter);
 
+app.all("*", (request, response) => {
+  response.status(404).send({ message: "This path does not exist" });
+});
+
 app.use(customErrorHandler);
 app.use(serverErrorHandler);
 

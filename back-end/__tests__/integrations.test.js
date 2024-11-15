@@ -142,4 +142,15 @@ describe("back end testing", () => {
         });
     });
   });
+
+  describe.only("invalid api path testing", () => {
+    test("404 invalid api path: responds with a message informing the user that the api path is invalid", () => {
+      return request(app)
+        .get("/api/invalid-api-path")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.message).toBe("This path does not exist");
+        });
+    });
+  });
 });
