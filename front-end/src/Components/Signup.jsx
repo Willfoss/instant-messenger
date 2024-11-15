@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./component-styling/signup.css";
 import { Link } from "react-router-dom";
+import { uploadImageToCloudinary } from "../api";
 
 export default function Signup() {
   const [name, setName] = useState("");
@@ -8,6 +9,7 @@ export default function Signup() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [file, setFile] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   function handleNameChange(event) {
     setName(event.target.value);
@@ -26,7 +28,23 @@ export default function Signup() {
   }
 
   function handleFileChange(event) {
-    console.log(event.target.value);
+    setIsLoading(true);
+    const image = event.target.files[0];
+
+    const formData = new FormData();
+    formData.append("file", image);
+    formData.append("upload_preset", "jiffy-chat");
+    formData.append("cloud_name", "dubtm2mub");
+
+    return uploadImageToCloudinary(formData)
+      .then((data) => {
+        console.log(data);
+        setFile(data.url.toString());
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        setIsLoading(false);
+      });
   }
 
   function handleSignupSubmit(event) {
@@ -62,7 +80,7 @@ export default function Signup() {
           </label>
           <label className="signup-text" htmlFor="profile-picture">
             Upload your file
-            <input className="image-uploader" type="file" name="profile-picture" accept="image/*" value={file} onChange={handleFileChange}></input>
+            <input className="image-uploader" type="file" name="profile-picture" accept="image/*" onChange={handleFileChange}></input>
           </label>
           <button className="signup-button">Sign up</button>
           <Link className="link" to="/">
