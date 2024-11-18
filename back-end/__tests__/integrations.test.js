@@ -60,11 +60,11 @@ describe("back end testing", () => {
           expect(typeof body.user.token).toBe("string");
         });
     });
-    test("POST new user 200: if the user tries to register with an existing email they will be informed", () => {
+    test("POST new user 409: if the user tries to register with an existing email they will be informed", () => {
       return request(app)
         .post("/api/users")
         .send({ name: "will", email: "willfossard@outlook.com", password: "hello", age: 54 })
-        .expect(200)
+        .expect(409)
         .then(({ body }) => {
           expect(body.message).toBe("A user already exists with that email address. Please log in or try again");
         });

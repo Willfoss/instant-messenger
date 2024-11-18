@@ -5,7 +5,7 @@ const cloudinaryImageUploadApi = axios.create({
 });
 
 const jiffyApi = axios.create({
-  baseURL: "/api",
+  baseURL: "http://localhost:9000/api",
 });
 
 export function uploadImageToCloudinary(formData) {
@@ -15,7 +15,13 @@ export function uploadImageToCloudinary(formData) {
 }
 
 export function signUpUser(name, email, password, picture) {
-  return jiffy.post("/users", { name, email, password, picture }).then(({ data }) => {
+  return jiffyApi.post("/users", picture === "" ? { name, email, password } : { name, email, password, picture }).then(({ data }) => {
+    return data;
+  });
+}
+
+export function logUserIn(email, password) {
+  return jiffyApi.post("/users/login", { email, password }).then(({ data }) => {
     return data;
   });
 }

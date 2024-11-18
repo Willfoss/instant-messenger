@@ -71,15 +71,18 @@ export default function Signup() {
     if (!email) setIsEmailError(true);
     if (!password) setIsPasswordError(true);
     if (confirmPassword !== password) setIsConfirmPasswordError(true);
-    // signUpUser(name, email, password, file)
-    //   .then(() => {
-    setIsLoading(false);
-    //     navigate("/login");
-    //   })
-    //   .catch(() => {
-    //     setIsLoading(false);
-    //     setIsError(true);
-    //   });
+
+    return signUpUser(name, email, password, file)
+      .then((data) => {
+        console.log(data);
+        setIsLoading(false);
+        navigate("/login");
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsLoading(false);
+        setIsError(true);
+      });
   }
 
   return (

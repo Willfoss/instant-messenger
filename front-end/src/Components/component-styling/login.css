@@ -89,6 +89,12 @@ input,
   cursor: pointer;
 }
 
+.login-error-text {
+  color: red;
+  font-size: 0.8em;
+  margin-top: 0.2em;
+}
+
 @media screen and (min-width: 768px) {
   .login-container {
     justify-content: center;

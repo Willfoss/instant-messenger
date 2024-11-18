@@ -22,7 +22,7 @@ function addNewUser(name, email, password, picture) {
 
   return User.findOne({ email }).then((user) => {
     if (user) {
-      return Promise.reject({ status: 200, message: "A user already exists with that email address. Please log in or try again" });
+      return Promise.reject({ status: 409, message: "A user already exists with that email address. Please log in or try again" });
     } else {
       return newUser.save().then((user) => {
         const response = { ...user };
