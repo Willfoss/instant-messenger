@@ -142,7 +142,7 @@ describe("back end testing", () => {
         });
     });
   });
-  describe.only("GET all users testing", () => {
+  describe("GET all users testing", () => {
     let jwt = "";
     beforeEach(() => {
       return request(app)

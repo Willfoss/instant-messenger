@@ -1,6 +1,6 @@
 const express = require("express");
 const apiRouter = require("./routes/api-router");
-const { customErrorHandler, serverErrorHandler } = require("./errorHandling");
+const { customErrorHandler, serverErrorHandler } = require("./middleware/errorHandling");
 const cors = require("cors");
 
 const app = express();
