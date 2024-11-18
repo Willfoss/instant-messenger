@@ -75,7 +75,7 @@ export default function Signup() {
 
     return signUpUser(name, email, password, file)
       .then((data) => {
-        console.log(data);
+        setIsError(false);
         setIsLoading(false);
         navigate("/login");
       })
