@@ -14,7 +14,7 @@ export default function Signup() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [file, setFile] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(true);
+  const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isNameError, setIsNameError] = useState(false);
   const [isEmailError, setIsEmailError] = useState(false);
@@ -77,7 +77,7 @@ export default function Signup() {
       .then((data) => {
         setIsError(false);
         setIsLoading(false);
-        navigate("/login");
+        navigate("/");
       })
       .catch((error) => {
         setErrorMessage(error.response.data.message);
