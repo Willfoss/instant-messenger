@@ -54,4 +54,20 @@ function authUser(email, password) {
   });
 }
 
-module.exports = { addNewUser, authUser };
+function fetchAllUsers(search, user) {
+  let query = {};
+  if (search) {
+    query = { $or: [{ name: { $regex: search, $options: "i" } }, { email: { $regex: search, $options: "i" } }] };
+  }
+  return User.find(query)
+    .find({ _id: { $ne: user._id } })
+    .then((users) => {
+      if (users.length === 0) {
+        return Promise.reject({ status: 404, message: "No Users Found" });
+      } else {
+        return users;
+      }
+    });
+}
+
+module.exports = { addNewUser, authUser, fetchAllUsers };

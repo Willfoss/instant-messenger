@@ -88,7 +88,7 @@ describe("back end testing", () => {
         });
     });
   });
-  describe.only("sign in and authorise user testing", () => {
+  describe("sign in and authorise user testing", () => {
     test("POST login 201: returns the user object that has just signed in if email and password are correct", () => {
       return request(app)
         .post("/api/users/login")
@@ -142,8 +142,76 @@ describe("back end testing", () => {
         });
     });
   });
+  describe.only("GET all users testing", () => {
+    let jwt = "";
+    beforeEach(() => {
+      return request(app)
+        .post("/api/users/login")
+        .send({ email: "willfossard@outlook.com", password: "password123" })
+        .then(({ body }) => {
+          jwt = body.user.token;
+        });
+    });
 
-  describe.only("invalid api path testing", () => {
+    test("GET 200: returns an array of user objects but does not include the user that is logged in", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .set({ authorization: `Bearer ${jwt}` })
+        .then(({ body }) => {
+          expect(body.users.length).toBe(4);
+          body.users.forEach((user) => {
+            expect(user).toMatchObject({
+              name: expect.any(String),
+              email: expect.any(String),
+              password: expect.any(String),
+              picture: expect.any(String),
+            });
+            expect(user.email).not.toBe("willfossard@outlook.com");
+          });
+        });
+    });
+    test("QUERY search GET 200: returns all results that include the search term in the name or email", () => {
+      const search = "will";
+      const regex = /will/;
+      return request(app)
+        .get(`/api/users?search=${search}`)
+        .set({ authorization: `Bearer ${jwt}` })
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.users.length).toBe(2);
+          body.users.forEach((user) => {
+            expect(user).toMatchObject({
+              name: expect.any(String),
+              email: expect.any(String),
+              password: expect.any(String),
+              picture: expect.any(String),
+            });
+            const matches = regex.test(user.name) === true || regex.test(user.email) === true ? true : false;
+            expect(matches).toBe(true);
+          });
+        });
+    });
+    test("QUERY search GET 401: responds with unauthorised message if no user logged in trying to access api", () => {
+      return request(app)
+        .get("/api/users?search=jakob")
+        .expect(401)
+        .then(({ body }) => {
+          expect(body.message).toBe("User not authorised");
+        });
+    });
+    test("QUERY search GET 404: responds with a not found if search term does not exist in either the name or email", () => {
+      return request(app)
+        .get("/api/users?search=jakob")
+        .set({ authorization: `Bearer ${jwt}` })
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.message).toBe("No Users Found");
+        });
+    });
+  });
+
+  describe("invalid api path testing", () => {
     test("404 invalid api path: responds with a message informing the user that the api path is invalid", () => {
       return request(app)
         .get("/api/invalid-api-path")

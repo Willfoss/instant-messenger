@@ -1,4 +1,4 @@
-const { addNewUser, authUser } = require("../services/user-services");
+const { addNewUser, authUser, fetchAllUsers } = require("../services/user-services");
 const bcrypt = require("bcrypt");
 
 function postNewUser(request, response, next) {
@@ -23,4 +23,16 @@ function loginUser(request, response, next) {
     });
 }
 
-module.exports = { postNewUser, loginUser };
+function getAllUsers(request, response, next) {
+  const { search } = request.query;
+  const { user } = request;
+  fetchAllUsers(search, user)
+    .then((users) => {
+      response.send({ users });
+    })
+    .catch((error) => {
+      next(error);
+    });
+}
+
+module.exports = { postNewUser, loginUser, getAllUsers };
