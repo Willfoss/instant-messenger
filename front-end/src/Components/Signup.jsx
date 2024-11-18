@@ -14,7 +14,8 @@ export default function Signup() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [file, setFile] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
+  const [isError, setIsError] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
   const [isNameError, setIsNameError] = useState(false);
   const [isEmailError, setIsEmailError] = useState(false);
   const [isPasswordError, setIsPasswordError] = useState(false);
@@ -79,7 +80,8 @@ export default function Signup() {
         navigate("/login");
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error.response.data.message);
+        setErrorMessage(error.response.data.message);
         setIsLoading(false);
         setIsError(true);
       });
@@ -90,6 +92,7 @@ export default function Signup() {
       <div className="signup-container">
         <form onSubmit={handleSignupSubmit} className="signup-form">
           <h2 className="signup-header">Sign Up for Free</h2>
+          {isError && <ErrorModal setIsError={setIsError} errorMessage={errorMessage} />}
           <label className="signup-text" htmlFor="name">
             Name
             <input className="signup-text text-input" name="name" type="text" value={name} onChange={handleNameChange}></input>
@@ -131,7 +134,6 @@ export default function Signup() {
             <p className="to-login"> Already a user? Log in!</p>
           </Link>
         </form>
-        {isError && <ErrorModal setIsError={setIsError} />}
       </div>
     </section>
   );

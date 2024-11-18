@@ -1,9 +1,6 @@
 #error-section {
-  position: fixed;
   z-index: 5;
-  width: 100%;
-  height: 100%;
-  padding: 0em 1em;
+  width: 400px;
   background-color: transparent;
   display: flex;
   justify-content: center;
@@ -15,7 +12,7 @@
   justify-content: space-between;
   padding: 0.5em 1em;
   height: 25%;
-  background-color: #991b1b;
+
   border-top-left-radius: 1em;
   border-top-right-radius: 1em;
   color: white;
@@ -24,8 +21,8 @@
 
 .error-message-container {
   width: 100%;
-  background-color: #374151;
-  height: 200px;
+  background-color: #991b1b;
+  height: 125px;
   max-width: 400px;
   border-radius: 1em;
 }
@@ -46,20 +43,5 @@
 
 .close-error:hover {
   color: gray;
-  cursor: pointer;
-}
-
-.close-error-button {
-  border: none;
-  border-radius: 0.3em;
-  height: 3em;
-  width: 100%;
-  font-size: 1em;
-  margin-top: 1em;
-  background-color: #25d366;
-  font-weight: bold;
-}
-
-.close-error-button:hover {
   cursor: pointer;
 }

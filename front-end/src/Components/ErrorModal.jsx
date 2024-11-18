@@ -2,7 +2,7 @@ import React from "react";
 import "../Components/component-styling/errorModal.css";
 
 export default function ErrorModal(props) {
-  const { setIsError } = props;
+  const { setIsError, errorMessage } = props;
 
   function closeError(event) {
     setIsError(false);
@@ -18,10 +18,7 @@ export default function ErrorModal(props) {
           </p>
         </div>
         <div className="error-body">
-          <p className="error-text">Whoops! Looks like something went wrong. Please try again!</p>
-          <button className="close-error-button" onClick={closeError}>
-            Try again
-          </button>
+          <p className="error-text">{errorMessage ? errorMessage : "Whoops! Looks like something went wrong. Please try again!"}</p>
         </div>
       </div>
     </section>
