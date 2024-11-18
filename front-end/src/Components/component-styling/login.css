@@ -30,12 +30,21 @@ label {
 }
 
 input,
-.login-button {
+.login-button,
+.guest-button {
   border: none;
   border-radius: 0.3em;
   height: 3em;
   width: 100%;
   font-size: 1em;
+}
+
+.guest-button {
+  width: 400px;
+  margin-top: 1em;
+  background-color: red;
+  font-weight: bold;
+  color: #fff;
 }
 
 .login-button {

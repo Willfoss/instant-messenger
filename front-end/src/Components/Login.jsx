@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import "./component-styling/login.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { logUserIn } from "../api";
 import ErrorModal from "./ErrorModal";
 import buttonLoading from "../assets/loading-on-button.json";
@@ -16,13 +16,21 @@ export default function Login() {
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const { setLoggedInUser } = useContext(UserContext);
+  const navigate = useNavigate;
 
   function handleEmailChange(event) {
     setEmail(event.target.value);
+    setIsEmailError(false);
   }
 
   function handlePasswordChange(event) {
     setPassword(event.target.value);
+    setIsPasswordError(false);
+  }
+
+  function handleGuestLogin() {
+    setEmail("guest@guestemail.com");
+    setPassword("guest");
   }
 
   function handleLoginFormSubmit(event) {
@@ -75,6 +83,9 @@ export default function Login() {
             <p className="to-signup"> Not a user? sign up here!</p>
           </Link>
         </form>
+        <button className="guest-button" onClick={handleGuestLogin}>
+          Set Guest Account Credentials
+        </button>
       </div>
     </section>
   );
