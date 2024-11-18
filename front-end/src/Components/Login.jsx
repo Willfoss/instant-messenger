@@ -26,6 +26,7 @@ export default function Login() {
     if (!email) setIsEmailError(true);
     if (!password) setIsPasswordError(true);
     setIsLoading(true);
+    setIsError(false);
     logUserIn(email, password)
       .then(() => {
         setIsLoading(true);
@@ -35,7 +36,6 @@ export default function Login() {
         setErrorMessage(error.response.data.message);
         setIsLoading(false);
       });
-    console.log("hello");
   }
 
   return (
