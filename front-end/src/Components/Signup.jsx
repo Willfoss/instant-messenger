@@ -80,7 +80,6 @@ export default function Signup() {
         navigate("/login");
       })
       .catch((error) => {
-        console.log(error.response.data.message);
         setErrorMessage(error.response.data.message);
         setIsLoading(false);
         setIsError(true);
