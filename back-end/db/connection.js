@@ -9,7 +9,8 @@ require("dotenv").config({
 mongoose
   .connect(process.env.MONGO_URL)
   .then(() => {
-    console.log("Connected to MongoDB");
+    if (ENV === "test") console.log("Connected to test MongoDB");
+    if (ENV === "development") console.log("Connected to dev MongoDB");
   })
   .catch((error) => {
     console.error("Error connecting to MongoDB:", error);
