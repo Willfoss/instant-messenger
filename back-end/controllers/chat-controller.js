@@ -1,4 +1,4 @@
-const { getAccessChat, fetchAllChatsForUser, createGroupChat } = require("../services/chat-services");
+const { getAccessChat, fetchAllChatsForUser, createGroupChat, updateGroupName } = require("../services/chat-services");
 
 function accessChat(request, response, next) {
   const { user_id } = request.body;
@@ -27,7 +27,6 @@ function postGroupChat(request, response, next) {
   const { users, group_name } = request.body;
   const { user } = request;
 
-  console.log(users, group_name, user);
   createGroupChat(users, group_name, user)
     .then((groupChat) => {
       response.status(201).send({ groupChat });
@@ -37,4 +36,15 @@ function postGroupChat(request, response, next) {
     });
 }
 
-module.exports = { accessChat, getAllChatsForUser, postGroupChat };
+function patchGroupName(request, response, next) {
+  const { group_name, group_id } = request.body;
+  updateGroupName(group_name, group_id)
+    .then((groupChat) => {
+      response.send({ groupChat });
+    })
+    .catch((error) => {
+      next(error);
+    });
+}
+
+module.exports = { accessChat, getAllChatsForUser, postGroupChat, patchGroupName };

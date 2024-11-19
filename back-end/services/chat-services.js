@@ -88,4 +88,21 @@ function createGroupChat(users, group_name, user) {
     return Chat.findOne({ _id: groupchat._id }).populate("users", "-password").populate("groupAdmin", "-password");
   });
 }
-module.exports = { getAccessChat, fetchAllChatsForUser, createGroupChat };
+
+function updateGroupName(group_chat_name, group_chat_id) {
+  if (!group_chat_name || !group_chat_id) {
+    return Promise.reject({ status: 400, message: "A group name and group id must be included" });
+  }
+  return Chat.findByIdAndUpdate(group_chat_id, { chatName: group_chat_name }, { new: true })
+    .populate("users", "-password")
+    .populate("groupAdmin", "-password")
+    .then((groupChat) => {
+      if (!groupChat) {
+        return Promise.reject({ status: 404, message: "This group chat does not exist" });
+      } else {
+        return groupChat;
+      }
+    });
+}
+
+module.exports = { getAccessChat, fetchAllChatsForUser, createGroupChat, updateGroupName };

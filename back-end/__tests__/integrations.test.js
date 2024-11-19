@@ -476,10 +476,12 @@ describe("back end testing", () => {
     });
   });
 
-  describe.only("create group testing", () => {
+  describe("create group and update group testing", () => {
     let jwt = "";
     let chatBobUserId = "";
     let chatHazelUserId = "";
+    let chatFosterUserId = "";
+    let groupChatId = "";
 
     //log user in
     beforeEach(() => {
@@ -509,6 +511,28 @@ describe("back end testing", () => {
           chatHazelUserId = body.users[0]._id;
         });
     });
+
+    //get will foster before every test
+    beforeEach(() => {
+      return request(app)
+        .get("/api/users?search=foster")
+        .set({ authorization: `Bearer ${jwt}` })
+        .then(({ body }) => {
+          chatFosterUserId = body.users[0]._id;
+        });
+    });
+
+    //create group before testing (this was added after testing the create a group testing)
+    beforeEach(() => {
+      return request(app)
+        .post("/api/chats/groups")
+        .send({ group_name: "test-group", users: [chatFosterUserId, chatBobUserId] })
+        .set({ authorization: `Bearer ${jwt}` })
+        .then(({ body }) => {
+          groupChatId = body.groupChat._id;
+        });
+    });
+
     test("POST group 201: responds with the newly created group", () => {
       return request(app)
         .post("/api/chats/groups")
@@ -558,6 +582,56 @@ describe("back end testing", () => {
           });
         });
     });
+    test("POST group 201: responds with the newly created group even if all the users already exist in a group with the same name", () => {
+      return request(app)
+        .post("/api/chats/groups")
+        .send({ group_name: "test-group", users: [chatFosterUserId, chatBobUserId] })
+        .set({ authorization: `Bearer ${jwt}` })
+        .expect(201)
+        .then(({ body }) => {
+          expect(body.groupChat).toMatchObject({
+            chatName: "test-group",
+            isGroupChat: true,
+            users: [
+              {
+                _id: chatFosterUserId,
+                name: "will foster",
+                email: "willfoster@email.com",
+                picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                createdAt: expect.any(String),
+                updatedAt: expect.any(String),
+              },
+              {
+                _id: chatBobUserId,
+                name: "bob marley",
+                email: "bob_marley@outlook.com",
+                picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                createdAt: expect.any(String),
+                updatedAt: expect.any(String),
+              },
+              {
+                _id: loggedInUserId,
+                name: "will fossard",
+                email: "willfossard@outlook.com",
+                picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                createdAt: expect.any(String),
+                updatedAt: expect.any(String),
+              },
+            ],
+            groupAdmin: {
+              _id: loggedInUserId,
+              name: "will fossard",
+              email: "willfossard@outlook.com",
+              picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+              createdAt: expect.any(String),
+              updatedAt: expect.any(String),
+            },
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String),
+          });
+        });
+    });
+
     test("POST groupchat 201: ignores any additional information sent in the post request", () => {
       return request(app)
         .post("/api/chats/groups")
@@ -596,6 +670,135 @@ describe("back end testing", () => {
         .expect(400)
         .then(({ body }) => {
           expect(body.message).toBe("More than two users are required to create a group chat");
+        });
+    });
+
+    test.only("PATCH groupchat 200: responds with the updated chat object upon successfull patch request", () => {
+      return request(app)
+        .patch("/api/chats/groups")
+        .send({ group_id: groupChatId, group_name: "renaming-test" })
+        .set({ authorization: `Bearer ${jwt}` })
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.groupChat).toMatchObject({
+            chatName: "renaming-test",
+            isGroupChat: true,
+            users: [
+              {
+                _id: chatFosterUserId,
+                name: "will foster",
+                email: "willfoster@email.com",
+                picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                createdAt: expect.any(String),
+                updatedAt: expect.any(String),
+              },
+              {
+                _id: chatBobUserId,
+                name: "bob marley",
+                email: "bob_marley@outlook.com",
+                picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                createdAt: expect.any(String),
+                updatedAt: expect.any(String),
+              },
+              {
+                _id: loggedInUserId,
+                name: "will fossard",
+                email: "willfossard@outlook.com",
+                picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                createdAt: expect.any(String),
+                updatedAt: expect.any(String),
+              },
+            ],
+            groupAdmin: {
+              _id: loggedInUserId,
+              name: "will fossard",
+              email: "willfossard@outlook.com",
+              picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+              createdAt: expect.any(String),
+              updatedAt: expect.any(String),
+            },
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String),
+          });
+        });
+    });
+    test.only("PATCH groupchat 200: ignores any addition information put in the patch request", () => {
+      return request(app)
+        .patch("/api/chats/groups")
+        .send({ group_id: groupChatId, group_name: "renaming-test", group_slug: "HEY" })
+        .set({ authorization: `Bearer ${jwt}` })
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.groupChat).toMatchObject({
+            chatName: "renaming-test",
+            isGroupChat: true,
+            users: [
+              {
+                _id: chatFosterUserId,
+                name: "will foster",
+                email: "willfoster@email.com",
+                picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                createdAt: expect.any(String),
+                updatedAt: expect.any(String),
+              },
+              {
+                _id: chatBobUserId,
+                name: "bob marley",
+                email: "bob_marley@outlook.com",
+                picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                createdAt: expect.any(String),
+                updatedAt: expect.any(String),
+              },
+              {
+                _id: loggedInUserId,
+                name: "will fossard",
+                email: "willfossard@outlook.com",
+                picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                createdAt: expect.any(String),
+                updatedAt: expect.any(String),
+              },
+            ],
+            groupAdmin: {
+              _id: loggedInUserId,
+              name: "will fossard",
+              email: "willfossard@outlook.com",
+              picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+              createdAt: expect.any(String),
+              updatedAt: expect.any(String),
+            },
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String),
+          });
+          expect(body.groupChat.hasOwnProperty("group_slug")).toBe(false);
+        });
+    });
+    test.only("PATCH groupchat 401: cannot create group chat if user is not authorised", () => {
+      return request(app)
+        .patch("/api/chats/groups")
+        .send({ group_id: groupChatId, group_name: "renaming-test", group_slug: "HEY" })
+        .expect(401)
+        .then(({ body }) => {
+          expect(body.message).toBe("User not authorised");
+        });
+    });
+    test.only("PATCH groupchat 400: returns bad request if information is missing from the request", () => {
+      return request(app)
+        .patch("/api/chats/groups")
+        .send({ group_id: groupChatId })
+        .set({ authorization: `Bearer ${jwt}` })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe("A group name and group id must be included");
+        });
+    });
+    test.only("PATCH groupchat 404: returns not found if no chat exists by that id yet", () => {
+      return request(app)
+        .patch("/api/chats/groups")
+        .send({ group_id: "673c9f36eb8b08d1a8f58657", group_name: "renaming-test" })
+        .set({ authorization: `Bearer ${jwt}` })
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.message).toBe("This group chat does not exist");
         });
     });
   });
