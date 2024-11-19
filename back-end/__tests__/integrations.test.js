@@ -211,6 +211,141 @@ describe("back end testing", () => {
     });
   });
 
+  describe.only("get access to chat testing", () => {
+    let jwt = "";
+    let chatBobUserId = "";
+    let chatHazelUserId = "";
+
+    beforeEach(() => {
+      return request(app)
+        .post("/api/users/login")
+        .send({ email: "willfossard@outlook.com", password: "password123" })
+        .then(({ body }) => {
+          jwt = body.user.token;
+          loggedInUserId = body.user._id;
+        });
+    });
+    //get bob id before every test
+    beforeEach(() => {
+      return request(app)
+        .get("/api/users?search=bob")
+        .set({ authorization: `Bearer ${jwt}` })
+        .then(({ body }) => {
+          chatBobUserId = body.users[0]._id;
+        });
+    });
+    //get will hazel before every test
+    beforeEach(() => {
+      return request(app)
+        .get("/api/users?search=hazel")
+        .set({ authorization: `Bearer ${jwt}` })
+        .then(({ body }) => {
+          chatHazelUserId = body.users[0]._id;
+        });
+    });
+
+    //create a pre-existing chat before every test
+    beforeEach(() => {
+      return request(app)
+        .post("/api/chats")
+        .send({ user_id: chatHazelUserId })
+        .set({ authorization: `Bearer ${jwt}` });
+    });
+
+    test("POST chat 201: creates a chat object if chat does not yet exist", () => {
+      return request(app)
+        .post("/api/chats")
+        .send({ user_id: chatBobUserId })
+        .set({ authorization: `Bearer ${jwt}` })
+        .expect(201)
+        .then(({ body }) => {
+          expect(body.chat).toMatchObject({
+            _id: expect.any(String),
+            chatName: "sender",
+            isGroupChat: false,
+            users: [
+              {
+                _id: loggedInUserId,
+                name: "will fossard",
+                email: "willfossard@outlook.com",
+                picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                __v: 0,
+                createdAt: expect.any(String),
+                updatedAt: expect.any(String),
+              },
+              {
+                _id: chatBobUserId,
+                name: "bob marley",
+                email: "bob_marley@outlook.com",
+                picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                __v: 0,
+                createdAt: expect.any(String),
+                updatedAt: expect.any(String),
+              },
+            ],
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String),
+          });
+        });
+    });
+    test("POST chat 201: returns chat object if chat already exists", () => {
+      return request(app)
+        .post("/api/chats")
+        .send({ user_id: chatHazelUserId })
+        .set({ authorization: `Bearer ${jwt}` })
+        .expect(201)
+        .then(({ body }) => {
+          expect(body.chat).toMatchObject({
+            _id: expect.any(String),
+            chatName: "sender",
+            isGroupChat: false,
+            users: [
+              {
+                _id: loggedInUserId,
+                name: "will fossard",
+                email: "willfossard@outlook.com",
+                picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                __v: 0,
+                createdAt: expect.any(String),
+                updatedAt: expect.any(String),
+              },
+              {
+                _id: chatHazelUserId,
+                name: "will hazel",
+                email: "hazel@email.com",
+                picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                __v: 0,
+                createdAt: expect.any(String),
+                updatedAt: expect.any(String),
+              },
+            ],
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String),
+          });
+        });
+    });
+    test("POST chat 400: returns a bad request if no id sent with the request", () => {
+      return request(app)
+        .post("/api/chats")
+        .send({})
+        .set({ authorization: `Bearer ${jwt}` })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe("User ID not sent with request");
+        });
+    });
+    test("POST chat 404: returns a not found if no user with that id exists", () => {
+      return request(app)
+        .post("/api/chats")
+        .send({ user_id: "123456678" })
+        .set({ authorization: `Bearer ${jwt}` })
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.message).toBe("No user found");
+        });
+    });
+  });
+
   describe("invalid api path testing", () => {
     test("404 invalid api path: responds with a message informing the user that the api path is invalid", () => {
       return request(app)

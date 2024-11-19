@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const { User } = require("../models/user-model.js");
 
-function protect(request, response, next) {
+function authorise(request, response, next) {
   let token;
 
   if (request.headers.authorization && request.headers.authorization.startsWith("Bearer ")) {
@@ -25,4 +25,4 @@ function protect(request, response, next) {
   }
 }
 
-module.exports = { protect };
+module.exports = { authorise };
