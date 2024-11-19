@@ -1,4 +1,4 @@
-const { getAccessChat, fetchAllChatsForUser, createGroupChat, updateGroupName } = require("../services/chat-services");
+const { getAccessChat, fetchAllChatsForUser, createGroupChat, updateGroupName, updateGroupMember } = require("../services/chat-services");
 
 function accessChat(request, response, next) {
   const { user_id } = request.body;
@@ -47,4 +47,15 @@ function patchGroupName(request, response, next) {
     });
 }
 
-module.exports = { accessChat, getAllChatsForUser, postGroupChat, patchGroupName };
+function addGroupMember(request, response, next) {
+  const { group_chat_id, user_to_add } = request.body;
+  updateGroupMember(group_chat_id, user_to_add)
+    .then((groupChat) => {
+      response.send({ groupChat });
+    })
+    .catch((error) => {
+      next(error);
+    });
+}
+
+module.exports = { accessChat, getAllChatsForUser, postGroupChat, patchGroupName, addGroupMember };

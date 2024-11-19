@@ -93,16 +93,45 @@ function updateGroupName(group_chat_name, group_chat_id) {
   if (!group_chat_name || !group_chat_id) {
     return Promise.reject({ status: 400, message: "A group name and group id must be included" });
   }
-  return Chat.findByIdAndUpdate(group_chat_id, { chatName: group_chat_name }, { new: true })
-    .populate("users", "-password")
-    .populate("groupAdmin", "-password")
-    .then((groupChat) => {
-      if (!groupChat) {
+  return Chat.findById(group_chat_id)
+    .then((chat) => {
+      if (!chat) {
         return Promise.reject({ status: 404, message: "This group chat does not exist" });
-      } else {
-        return groupChat;
       }
+      if (chat.isGroupChat === false) {
+        return Promise.reject({ status: 400, message: "Only a group chat can be renamed" });
+      } else {
+        return Chat.findByIdAndUpdate(group_chat_id, { chatName: group_chat_name }, { new: true })
+          .populate("users", "-password")
+          .populate("groupAdmin", "-password");
+      }
+    })
+    .then((groupChat) => {
+      return groupChat;
     });
 }
 
-module.exports = { getAccessChat, fetchAllChatsForUser, createGroupChat, updateGroupName };
+function updateGroupMember(group_chat_id, user_to_add) {
+  if (!group_chat_id || !user_to_add) {
+    return Promise.reject({ status: 400, message: "Must provide both users to add and the chat id" });
+  }
+
+  return Chat.findById(group_chat_id)
+    .then((chat) => {
+      if (!chat) {
+        return Promise.reject({ status: 404, message: "This group chat does not exist" });
+      }
+      if (chat.isGroupChat === false) {
+        return Promise.reject({ status: 400, message: "Only a group chat can add users" });
+      } else {
+        return Chat.findByIdAndUpdate(group_chat_id, { $push: { users: user_to_add } }, { new: true })
+          .populate("users", "-password")
+          .populate("groupAdmin", "-password");
+      }
+    })
+    .then((updatedGroupChat) => {
+      return updatedGroupChat;
+    });
+}
+
+module.exports = { getAccessChat, fetchAllChatsForUser, createGroupChat, updateGroupName, updateGroupMember };
