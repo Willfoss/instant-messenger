@@ -211,7 +211,7 @@ describe("back end testing", () => {
     });
   });
 
-  describe.only("get access to chat testing", () => {
+  describe("get access to chat testing", () => {
     let jwt = "";
     let chatBobUserId = "";
     let chatHazelUserId = "";
@@ -334,6 +334,15 @@ describe("back end testing", () => {
           expect(body.message).toBe("User ID not sent with request");
         });
     });
+    test("POST chat 401: returns ana authorised message if no user logged in", () => {
+      return request(app)
+        .post("/api/chats")
+        .send({})
+        .expect(401)
+        .then(({ body }) => {
+          expect(body.message).toBe("User not authorised");
+        });
+    });
     test("POST chat 404: returns a not found if no user with that id exists", () => {
       return request(app)
         .post("/api/chats")
@@ -342,6 +351,171 @@ describe("back end testing", () => {
         .expect(404)
         .then(({ body }) => {
           expect(body.message).toBe("No user found");
+        });
+    });
+  });
+
+  describe("GET all chats for user with chats testing", () => {
+    let jwt = "";
+    let chatHazelUserId = "";
+    let chatFosterUserId = "";
+
+    //log user in
+    beforeEach(() => {
+      return request(app)
+        .post("/api/users/login")
+        .send({ email: "willfossard@outlook.com", password: "password123" })
+        .then(({ body }) => {
+          jwt = body.user.token;
+          loggedInUserId = body.user._id;
+        });
+    });
+
+    //get will hazel before every test
+    beforeEach(() => {
+      return request(app)
+        .get("/api/users?search=hazel")
+        .set({ authorization: `Bearer ${jwt}` })
+        .then(({ body }) => {
+          chatHazelUserId = body.users[0]._id;
+        });
+    });
+    //get will foster before every test
+    beforeEach(() => {
+      return request(app)
+        .get("/api/users?search=foster")
+        .set({ authorization: `Bearer ${jwt}` })
+        .then(({ body }) => {
+          chatFosterUserId = body.users[0]._id;
+        });
+    });
+
+    //create a pre-existing chat before every test
+    beforeEach(() => {
+      return request(app)
+        .post("/api/chats")
+        .send({ user_id: chatHazelUserId })
+        .set({ authorization: `Bearer ${jwt}` });
+    });
+
+    //create a second pre-exisitng chat before every test
+    beforeEach(() => {
+      return request(app)
+        .post("/api/chats")
+        .send({ user_id: chatFosterUserId })
+        .set({ authorization: `Bearer ${jwt}` });
+    });
+
+    test("GET chats 200: responds with all chats for a user", () => {
+      return request(app)
+        .get("/api/chats")
+        .set({ authorization: `Bearer ${jwt}` })
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.chats.length).toBe(2);
+          body.chats.forEach((chat) => {
+            expect(chat).toMatchObject({
+              _id: expect.any(String),
+              chatName: "sender",
+              isGroupChat: false,
+              users: [
+                {
+                  _id: loggedInUserId,
+                  name: "will fossard",
+                  email: "willfossard@outlook.com",
+                  picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                  createdAt: expect.any(String),
+                  updatedAt: expect.any(String),
+                },
+                {
+                  _id: expect.any(String),
+                  name: expect.any(String),
+                  email: expect.any(String),
+                  picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                  createdAt: expect.any(String),
+                  updatedAt: expect.any(String),
+                },
+              ],
+              createdAt: expect.any(String),
+              updatedAt: expect.any(String),
+            });
+          });
+        });
+    });
+
+    test("GET chat 401: returns unauthorised message if user is not logged in", () => {
+      return request(app)
+        .get("/api/chats")
+        .expect(401)
+        .then(({ body }) => {
+          expect(body.message).toBe("User not authorised");
+        });
+    });
+  });
+
+  describe("GET all chats for user with no chats testing", () => {
+    beforeEach(() => {
+      return request(app)
+        .post("/api/users/login")
+        .send({ email: "bob_marley@outlook.com", password: "password234" })
+        .then(({ body }) => {
+          jwt = body.user.token;
+          loggedInUserId = body.user._id;
+        });
+    });
+    test("GET chat 200: returns an empty array if user exists but no chats exist", () => {
+      return request(app)
+        .get("/api/chats")
+        .set({ authorization: `Bearer ${jwt}` })
+        .expect(200)
+        .then(({ body }) => {
+          console.log(body);
+          expect(body.chats.length).toBe(0);
+          expect(body.chats).toEqual([]);
+        });
+    });
+  });
+
+  describe.only("create group testing", () => {
+    let jwt = "";
+    let chatBobUserId = "";
+    let chatHazelUserId = "";
+
+    beforeEach(() => {
+      return request(app)
+        .post("/api/users/login")
+        .send({ email: "willfossard@outlook.com", password: "password123" })
+        .then(({ body }) => {
+          jwt = body.user.token;
+          loggedInUserId = body.user._id;
+        });
+    });
+    //get bob id before every test
+    beforeEach(() => {
+      return request(app)
+        .get("/api/users?search=bob")
+        .set({ authorization: `Bearer ${jwt}` })
+        .then(({ body }) => {
+          chatBobUserId = body.users[0]._id;
+        });
+    });
+    //get will hazel before every test
+    beforeEach(() => {
+      return request(app)
+        .get("/api/users?search=hazel")
+        .set({ authorization: `Bearer ${jwt}` })
+        .then(({ body }) => {
+          chatHazelUserId = body.users[0]._id;
+        });
+    });
+    test("POST group 201: responds with the newly created group", () => {
+      return request(app)
+        .post("/api/groups")
+        .send({})
+        .set({ authorization: `Bearer ${jwt}` })
+        .expeect(201)
+        .then(({ body }) => {
+          console.log(body);
         });
     });
   });

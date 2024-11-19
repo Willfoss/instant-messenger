@@ -1,4 +1,4 @@
-const { getAccessChat } = require("../services/chat-services");
+const { getAccessChat, fetchAllChatsForUser } = require("../services/chat-services");
 
 function accessChat(request, response, next) {
   const { user_id } = request.body;
@@ -12,4 +12,15 @@ function accessChat(request, response, next) {
     });
 }
 
-module.exports = { accessChat };
+function getAllChatsForUser(request, response, next) {
+  const { user } = request;
+  fetchAllChatsForUser(user)
+    .then((chats) => {
+      response.send({ chats });
+    })
+    .catch((error) => {
+      next(error);
+    });
+}
+
+module.exports = { accessChat, getAllChatsForUser };

@@ -2,7 +2,7 @@ const { request } = require("../app");
 const { Chat } = require("../models/chat-models");
 const { User } = require("../models/user-model");
 
-async function getAccessChat(user_id, user) {
+function getAccessChat(user_id, user) {
   if (!user_id) {
     return Promise.reject({ status: 400, message: "User ID not sent with request" });
   }
@@ -50,4 +50,21 @@ async function getAccessChat(user_id, user) {
     });
 }
 
-module.exports = { getAccessChat };
+function fetchAllChatsForUser(user) {
+  return Chat.find({ users: { $elemMatch: { $eq: user._id } } })
+    .populate("users", "-password")
+    .populate("groupAdmin", "-password")
+    .populate("latestMessage")
+    .sort({ updatedAt: -1 })
+    .then((chats) => {
+      if (!chats) {
+        return [];
+      } else {
+        return User.populate(chats, {
+          path: "latestMessage.sender",
+          select: "name, picture, email",
+        });
+      }
+    });
+}
+module.exports = { getAccessChat, fetchAllChatsForUser };
