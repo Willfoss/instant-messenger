@@ -481,6 +481,7 @@ describe("back end testing", () => {
     let chatBobUserId = "";
     let chatHazelUserId = "";
 
+    //log user in
     beforeEach(() => {
       return request(app)
         .post("/api/users/login")
@@ -510,12 +511,91 @@ describe("back end testing", () => {
     });
     test("POST group 201: responds with the newly created group", () => {
       return request(app)
-        .post("/api/groups")
-        .send({})
+        .post("/api/chats/groups")
+        .send({ group_name: "test-group", users: [chatHazelUserId, chatBobUserId] })
         .set({ authorization: `Bearer ${jwt}` })
-        .expeect(201)
+        .expect(201)
         .then(({ body }) => {
-          console.log(body);
+          expect(body.groupChat).toMatchObject({
+            chatName: "test-group",
+            isGroupChat: true,
+            users: [
+              {
+                _id: chatHazelUserId,
+                name: "will hazel",
+                email: "hazel@email.com",
+                picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                createdAt: expect.any(String),
+                updatedAt: expect.any(String),
+              },
+              {
+                _id: chatBobUserId,
+                name: "bob marley",
+                email: "bob_marley@outlook.com",
+                picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                createdAt: expect.any(String),
+                updatedAt: expect.any(String),
+              },
+              {
+                _id: loggedInUserId,
+                name: "will fossard",
+                email: "willfossard@outlook.com",
+                picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                createdAt: expect.any(String),
+                updatedAt: expect.any(String),
+              },
+            ],
+            groupAdmin: {
+              _id: loggedInUserId,
+              name: "will fossard",
+              email: "willfossard@outlook.com",
+              picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+              createdAt: expect.any(String),
+              updatedAt: expect.any(String),
+            },
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String),
+          });
+        });
+    });
+    test("POST groupchat 201: ignores any additional information sent in the post request", () => {
+      return request(app)
+        .post("/api/chats/groups")
+        .send({
+          group_name: "test-group",
+          users: [chatHazelUserId, chatBobUserId],
+          group_image: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+        })
+        .set({ authorization: `Bearer ${jwt}` })
+        .expect(201)
+        .then(({ body }) => {
+          expect(body.groupChat.hasOwnProperty("group-image")).toBe(false);
+        });
+    });
+    test("POST groupchat 400: returns a bad request if missing a field in the post request", () => {
+      return request(app)
+        .post("/api/chats/groups")
+        .send({
+          group_name: "test-group",
+        })
+        .set({ authorization: `Bearer ${jwt}` })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe("All fields must be filled in");
+        });
+    });
+
+    test("POST groupchat 400: returns a bad request group chat is attempted to be made with 2 users or less", () => {
+      return request(app)
+        .post("/api/chats/groups")
+        .send({
+          group_name: "test-group",
+          users: [chatHazelUserId],
+        })
+        .set({ authorization: `Bearer ${jwt}` })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe("More than two users are required to create a group chat");
         });
     });
   });

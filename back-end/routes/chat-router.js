@@ -1,12 +1,12 @@
 const { authorise } = require("../middleware/auth");
-const { accessChat, getAllChatsForUser } = require("../controllers/chat-controller");
+const { accessChat, getAllChatsForUser, postGroupChat, patchGroupName } = require("../controllers/chat-controller");
 
 const chatRouter = require("express").Router();
 
 chatRouter.route("/").post(authorise, accessChat);
 chatRouter.route("/").get(authorise, getAllChatsForUser);
-// chatRouter.route("/group").post(authorise, createGroupChat);
-// chatRouter.route("/group").patch(authorise, patchGroupName);
+chatRouter.route("/groups").post(authorise, postGroupChat);
+chatRouter.route("/groups").patch(authorise, patchGroupName);
 // chatRouter.route("/group/remove").patch(authorise, deleteFromGroup);
 // chatRouter.route("/group/add").patch(authorise, patchGroupMember);
 

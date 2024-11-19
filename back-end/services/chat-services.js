@@ -67,4 +67,25 @@ function fetchAllChatsForUser(user) {
       }
     });
 }
-module.exports = { getAccessChat, fetchAllChatsForUser };
+
+function createGroupChat(users, group_name, user) {
+  if (!users || !group_name) {
+    return Promise.reject({ status: 400, message: "All fields must be filled in" });
+  }
+
+  if (users.length < 2) {
+    return Promise.reject({ status: 400, message: "More than two users are required to create a group chat" });
+  }
+
+  users.push(user);
+
+  return Chat.create({
+    chatName: group_name,
+    users: users,
+    isGroupChat: true,
+    groupAdmin: user,
+  }).then((groupchat) => {
+    return Chat.findOne({ _id: groupchat._id }).populate("users", "-password").populate("groupAdmin", "-password");
+  });
+}
+module.exports = { getAccessChat, fetchAllChatsForUser, createGroupChat };
