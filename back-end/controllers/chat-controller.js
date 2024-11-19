@@ -1,4 +1,11 @@
-const { getAccessChat, fetchAllChatsForUser, createGroupChat, updateGroupName, updateGroupMember } = require("../services/chat-services");
+const {
+  getAccessChat,
+  fetchAllChatsForUser,
+  createGroupChat,
+  updateGroupName,
+  updateGroupMember,
+  removeGroupMember,
+} = require("../services/chat-services");
 
 function accessChat(request, response, next) {
   const { user_id } = request.body;
@@ -58,4 +65,15 @@ function addGroupMember(request, response, next) {
     });
 }
 
-module.exports = { accessChat, getAllChatsForUser, postGroupChat, patchGroupName, addGroupMember };
+function deleteGroupMember(request, response, next) {
+  const { group_chat_id, user_to_remove } = request.body;
+  removeGroupMember(group_chat_id, user_to_remove)
+    .then((groupChat) => {
+      response.status(200).send({ groupChat });
+    })
+    .catch((error) => {
+      next(error);
+    });
+}
+
+module.exports = { accessChat, getAllChatsForUser, postGroupChat, patchGroupName, addGroupMember, deleteGroupMember };

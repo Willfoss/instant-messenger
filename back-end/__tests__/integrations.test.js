@@ -475,13 +475,14 @@ describe("back end testing", () => {
     });
   });
 
-  describe.only("create group and update group testing", () => {
+  describe("create group and update group testing", () => {
     let jwt = "";
     let chatBobUserId = "";
     let chatHazelUserId = "";
     let chatFosterUserId = "";
     let groupChatId = "";
     let singleChatId = "";
+    let groupChatId2 = "";
 
     //log user in
     beforeEach(() => {
@@ -534,7 +535,6 @@ describe("back end testing", () => {
     });
 
     //create a single group chat before testing
-    //create a second pre-exisitng chat before every test
     beforeEach(() => {
       return request(app)
         .post("/api/chats")
@@ -542,6 +542,16 @@ describe("back end testing", () => {
         .set({ authorization: `Bearer ${jwt}` })
         .then(({ body }) => {
           singleChatId = body.chat._id;
+        });
+    });
+    //create a second group chat with 4 members in it
+    beforeEach(() => {
+      return request(app)
+        .post("/api/chats/groups")
+        .send({ group_name: "test-group", users: [chatFosterUserId, chatBobUserId, chatHazelUserId] })
+        .set({ authorization: `Bearer ${jwt}` })
+        .then(({ body }) => {
+          groupChatId2 = body.groupChat._id;
         });
     });
 
@@ -837,13 +847,14 @@ describe("back end testing", () => {
           expect(body.message).toBe("This group chat does not exist");
         });
     });
-    test.only("PATCH addUser 200: returns the updated group object when a new use is added", () => {
+    test("PATCH add user to group chat 200: returns the updated group object when a new use is added", () => {
       return request(app)
         .patch("/api/chats/groups/add")
         .send({ group_chat_id: groupChatId, user_to_add: chatHazelUserId })
         .set({ authorization: `Bearer ${jwt}` })
         .expect(200)
         .then(({ body }) => {
+          expect(body.groupChat.users.length).toBe(4);
           expect(body.groupChat).toMatchObject({
             chatName: "test-group",
             isGroupChat: true,
@@ -894,7 +905,7 @@ describe("back end testing", () => {
           });
         });
     });
-    test.only("PATCH addUser 200: returns the updated group object when a new use is added", () => {
+    test("PATCH add user to group chat 200: ignores additional information sent in the reqest", () => {
       return request(app)
         .patch("/api/chats/groups/add")
         .send({ group_chat_id: groupChatId, user_to_add: chatHazelUserId, group_slug: "HEY" })
@@ -952,7 +963,7 @@ describe("back end testing", () => {
           expect(body.groupChat.hasOwnProperty("group_slug")).toBe(false);
         });
     });
-    test.only("PATCH groupname 401: cannot create group chat if user is not authorised", () => {
+    test("PATCH add user to group chat 401: cannot manipulate group chat members chat if user is not authorised", () => {
       return request(app)
         .patch("/api/chats/groups/add")
         .send({ group_chat_id: groupChatId, user_to_add: chatHazelUserId })
@@ -961,7 +972,7 @@ describe("back end testing", () => {
           expect(body.message).toBe("User not authorised");
         });
     });
-    test.only("PATCH groupname 400: cannot modify chat name if chat is not a group chat", () => {
+    test("PATCH add user to group chat 400: cannot modify group members if chat is not a group chat", () => {
       return request(app)
         .patch("/api/chats/groups/add")
         .send({ group_chat_id: singleChatId, user_to_add: chatHazelUserId })
@@ -971,7 +982,7 @@ describe("back end testing", () => {
           expect(body.message).toBe("Only a group chat can add users");
         });
     });
-    test.only("PATCH groupname 400: returns bad request if information is missing from the request", () => {
+    test("PATCH add user to group chat 400: returns bad request if information is missing from the request", () => {
       return request(app)
         .patch("/api/chats/groups/add")
         .send({ group_chat_id: groupChatId })
@@ -981,10 +992,164 @@ describe("back end testing", () => {
           expect(body.message).toBe("Must provide both users to add and the chat id");
         });
     });
-    test.only("PATCH groupname 404: returns not found if no chat exists by that id yet", () => {
+    test("PATCH add user to group chat 404: returns not found if no chat exists by that id yet", () => {
       return request(app)
         .patch("/api/chats/groups/add")
         .send({ group_chat_id: "673c9f36eb8b08d1a8f58650", user_to_add: chatHazelUserId })
+        .set({ authorization: `Bearer ${jwt}` })
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.message).toBe("This group chat does not exist");
+        });
+    });
+
+    //+++++++++++++++++++++++++++++++++++++++++++
+
+    test("PATCH remove user from group chat 200: returns the updated group object when a user is deleted from a group chat", () => {
+      return request(app)
+        .patch("/api/chats/groups/remove")
+        .send({ group_chat_id: groupChatId2, user_to_remove: chatHazelUserId })
+        .set({ authorization: `Bearer ${jwt}` })
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.groupChat.users.length).toBe(3);
+          expect(body.groupChat).toMatchObject({
+            chatName: "test-group",
+            isGroupChat: true,
+            users: [
+              {
+                _id: chatFosterUserId,
+                name: "will foster",
+                email: "willfoster@email.com",
+                picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                createdAt: expect.any(String),
+                updatedAt: expect.any(String),
+              },
+              {
+                _id: chatBobUserId,
+                name: "bob marley",
+                email: "bob_marley@outlook.com",
+                picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                createdAt: expect.any(String),
+                updatedAt: expect.any(String),
+              },
+              {
+                _id: loggedInUserId,
+                name: "will fossard",
+                email: "willfossard@outlook.com",
+                picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                createdAt: expect.any(String),
+                updatedAt: expect.any(String),
+              },
+            ],
+            groupAdmin: {
+              _id: loggedInUserId,
+              name: "will fossard",
+              email: "willfossard@outlook.com",
+              picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+              createdAt: expect.any(String),
+              updatedAt: expect.any(String),
+            },
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String),
+          });
+        });
+    });
+    test("PATCH remove user from group chat 200: ignores any additional information sent in the request", () => {
+      return request(app)
+        .patch("/api/chats/groups/remove")
+        .send({ group_chat_id: groupChatId2, user_to_remove: chatHazelUserId, group_slug: "HEY" })
+        .set({ authorization: `Bearer ${jwt}` })
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.groupChat.users.length).toBe(3);
+          expect(body.groupChat).toMatchObject({
+            chatName: "test-group",
+            isGroupChat: true,
+            users: [
+              {
+                _id: chatFosterUserId,
+                name: "will foster",
+                email: "willfoster@email.com",
+                picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                createdAt: expect.any(String),
+                updatedAt: expect.any(String),
+              },
+              {
+                _id: chatBobUserId,
+                name: "bob marley",
+                email: "bob_marley@outlook.com",
+                picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                createdAt: expect.any(String),
+                updatedAt: expect.any(String),
+              },
+              {
+                _id: loggedInUserId,
+                name: "will fossard",
+                email: "willfossard@outlook.com",
+                picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                createdAt: expect.any(String),
+                updatedAt: expect.any(String),
+              },
+            ],
+            groupAdmin: {
+              _id: loggedInUserId,
+              name: "will fossard",
+              email: "willfossard@outlook.com",
+              picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+              createdAt: expect.any(String),
+              updatedAt: expect.any(String),
+            },
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String),
+          });
+          expect(body.groupChat.hasOwnProperty("group_slug")).toBe(false);
+        });
+    });
+    test("PATCH remove user from group chat 400: Will not remove a user if only 3 people are in a group chat", () => {
+      return request(app)
+        .patch("/api/chats/groups/remove")
+        .send({ group_chat_id: groupChatId, user_to_remove: chatHazelUserId })
+        .set({ authorization: `Bearer ${jwt}` })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe("The are too few members to remove somebody from this group");
+        });
+    });
+
+    test("PATCH remove user from group chat 401: cannot manipulate group chat members if user is not authorised", () => {
+      return request(app)
+        .patch("/api/chats/groups/remove")
+        .send({ group_chat_id: groupChatId, user_to_remove: chatHazelUserId })
+        .expect(401)
+        .then(({ body }) => {
+          expect(body.message).toBe("User not authorised");
+        });
+    });
+    test("PATCH remove user from group chat 400: cannot modify group members if chat is not a group chat", () => {
+      return request(app)
+        .patch("/api/chats/groups/remove")
+        .send({ group_chat_id: singleChatId, user_to_remove: chatHazelUserId })
+        .set({ authorization: `Bearer ${jwt}` })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe("Only a group chat can remove users");
+        });
+    });
+    test("PATCH emove user from group chat 400: returns bad request if information is missing from the request", () => {
+      return request(app)
+        .patch("/api/chats/groups/remove")
+        .send({ group_chat_id: groupChatId2 })
+        .set({ authorization: `Bearer ${jwt}` })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).toBe("Must provide both user to remove and the chat id");
+        });
+    });
+    test("PATCH groupname 404: returns not found if no chat exists by that id yet", () => {
+      return request(app)
+        .patch("/api/chats/groups/remove")
+        .send({ group_chat_id: "673c9f36eb8b08d1a8f58650", user_to_remove: chatHazelUserId })
         .set({ authorization: `Bearer ${jwt}` })
         .expect(404)
         .then(({ body }) => {

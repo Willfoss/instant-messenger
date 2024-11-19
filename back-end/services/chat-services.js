@@ -134,4 +134,33 @@ function updateGroupMember(group_chat_id, user_to_add) {
     });
 }
 
-module.exports = { getAccessChat, fetchAllChatsForUser, createGroupChat, updateGroupName, updateGroupMember };
+function removeGroupMember(group_chat_id, user_to_remove) {
+  if (!group_chat_id || !user_to_remove) {
+    return Promise.reject({ status: 400, message: "Must provide both user to remove and the chat id" });
+  }
+
+  return Chat.findById(group_chat_id)
+    .then((chat) => {
+      if (!chat) {
+        return Promise.reject({ status: 404, message: "This group chat does not exist" });
+      }
+      if (chat.users.length === 2) {
+        return Promise.reject({ status: 400, message: "Only a group chat can remove users" });
+      }
+      if (chat.users.length < 4) {
+        return Promise.reject({ status: 400, message: "The are too few members to remove somebody from this group" });
+      }
+      if (chat.isGroupChat === false) {
+        return Promise.reject({ status: 400, message: "Only a group chat can remove users" });
+      } else {
+        return Chat.findByIdAndUpdate(group_chat_id, { $pull: { users: user_to_remove } }, { new: true })
+          .populate("users", "-password")
+          .populate("groupAdmin", "-password");
+      }
+    })
+    .then((updatedGroupChat) => {
+      return updatedGroupChat;
+    });
+}
+
+module.exports = { getAccessChat, fetchAllChatsForUser, createGroupChat, updateGroupName, updateGroupMember, removeGroupMember };
