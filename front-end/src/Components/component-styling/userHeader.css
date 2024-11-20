@@ -58,7 +58,6 @@
   height: 48px;
   gap: 1em;
   background-color: var(--secondary-background-colour);
-  border-top-left-radius: 0.9em;
   border-top-right-radius: 0.9em;
 }
 
@@ -86,7 +85,8 @@
   background-color: var(--primary-background-colour);
   height: 100dvh;
   width: 90%;
-  border-radius: 0.9em;
+  border-bottom-right-radius: 0.9em;
+  border-top-right-radius: 0.9em;
   left: 0;
   right: 0;
   transition: transform 0.3s ease-in;
