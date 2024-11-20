@@ -6,6 +6,7 @@ import Lottie from "lottie-react";
 import buttonLoading from "../assets/loading-on-button.json";
 import ErrorModal from "./ErrorModal";
 import { signUpUser } from "../api";
+import Header from "./Header";
 
 export default function Signup() {
   const [name, setName] = useState("");
@@ -88,51 +89,54 @@ export default function Signup() {
 
   return (
     <section id="signup-section">
-      <div className="signup-container">
-        <form onSubmit={handleSignupSubmit} className="signup-form">
-          <h2 className="signup-header">Sign Up for Free</h2>
-          {isError && <ErrorModal setIsError={setIsError} errorMessage={errorMessage} />}
-          <label className="signup-text" htmlFor="name">
-            Name
-            <input className="signup-text text-input" name="name" type="text" value={name} onChange={handleNameChange}></input>
-            {isNameError && <p className="signup-error-text ">Enter a Name</p>}
-          </label>
-          <label className="signup-text " htmlFor="email">
-            Email Address
-            <input className="signup-text text-input" name="email" type="email" value={email} onChange={handleEmailChange}></input>
-            {isEmailError && <p className="signup-error-text ">Enter an Email Address</p>}
-          </label>
-          <label className="signup-text" htmlFor="password">
-            Password
-            <input className="signup-text text-input" name="password" type="password" value={password} onChange={handlePasswordChange}></input>
-            {isPasswordError && <p className="signup-error-text ">Enter a Password</p>}
-          </label>
-          <label className="signup-text" htmlFor="confirm-password">
-            Confirm Password
-            <input
-              className="signup-text text-input"
-              name="confirm-password"
-              type="password"
-              value={confirmPassword}
-              onChange={handleConfirmPasswordChange}
-            ></input>
-            {isConfirmPasswordError && <p className="signup-error-text ">Passwords must match</p>}
-          </label>
-          <label className="signup-text" htmlFor="profile-picture">
-            Upload your file
-            <input className="image-uploader" type="file" name="profile-picture" accept="image/*" onChange={handleFileChange}></input>
-          </label>
-          {isLoading === true ? (
-            <div className="signup-button-loading">
-              <Lottie className="button-loading-animation " animationData={buttonLoading} loop={true} />
-            </div>
-          ) : (
-            <button className="signup-button">Sign up</button>
-          )}
-          <Link className="link" to="/">
-            <p className="to-login"> Already a user? Log in!</p>
-          </Link>
-        </form>
+      <Header />
+      <div className="signup-page-container">
+        <div className="signup-container">
+          <form onSubmit={handleSignupSubmit} className="signup-form">
+            <h2 className="signup-header">Sign Up for Free</h2>
+            {isError && <ErrorModal setIsError={setIsError} errorMessage={errorMessage} />}
+            <label className="signup-text" htmlFor="name">
+              Name
+              <input className="signup-text text-input" name="name" type="text" value={name} onChange={handleNameChange}></input>
+              {isNameError && <p className="signup-error-text ">Enter a Name</p>}
+            </label>
+            <label className="signup-text " htmlFor="email">
+              Email Address
+              <input className="signup-text text-input" name="email" type="email" value={email} onChange={handleEmailChange}></input>
+              {isEmailError && <p className="signup-error-text ">Enter an Email Address</p>}
+            </label>
+            <label className="signup-text" htmlFor="password">
+              Password
+              <input className="signup-text text-input" name="password" type="password" value={password} onChange={handlePasswordChange}></input>
+              {isPasswordError && <p className="signup-error-text ">Enter a Password</p>}
+            </label>
+            <label className="signup-text" htmlFor="confirm-password">
+              Confirm Password
+              <input
+                className="signup-text text-input"
+                name="confirm-password"
+                type="password"
+                value={confirmPassword}
+                onChange={handleConfirmPasswordChange}
+              ></input>
+              {isConfirmPasswordError && <p className="signup-error-text ">Passwords must match</p>}
+            </label>
+            <label className="signup-text" htmlFor="profile-picture">
+              Upload your file
+              <input className="image-uploader" type="file" name="profile-picture" accept="image/*" onChange={handleFileChange}></input>
+            </label>
+            {isLoading === true ? (
+              <div className="signup-button-loading">
+                <Lottie className="button-loading-animation " animationData={buttonLoading} loop={true} />
+              </div>
+            ) : (
+              <button className="signup-button">Sign up</button>
+            )}
+            <Link className="link" to="/">
+              <p className="to-login"> Already a user? Log in!</p>
+            </Link>
+          </form>
+        </div>
       </div>
     </section>
   );

@@ -1,20 +1,24 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 
 import Login from "./Components/Login";
 import Signup from "./Components/Signup";
 import Header from "./Components/Header";
+import Chats from "./Components/ChatPage";
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "./Context/UserContext";
+import ChatPage from "./Components/ChatPage";
 
 function App() {
+  const { loggedInUser } = useContext(UserContext);
+
   return (
-    <>
-      <Header />
-      <main>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-        </Routes>
-      </main>
-    </>
+    <main>
+      <Routes>
+        <Route path="/" element={loggedInUser ? <ChatPage /> : <Login />} />
+        <Route path="/signup" element={loggedInUser ? <ChatPage /> : <Signup />} />
+        <Route path="/chats" element={<ChatPage />} />
+      </Routes>
+    </main>
   );
 }
 
