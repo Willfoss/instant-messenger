@@ -25,3 +25,10 @@ export function logUserIn(email, password) {
     return data;
   });
 }
+
+export function searchForUser(search, authorisation) {
+  console.log(authorisation);
+  return jiffyApi.get(`/users?search=${search}`, authorisation).then(({ data }) => {
+    return data;
+  });
+}

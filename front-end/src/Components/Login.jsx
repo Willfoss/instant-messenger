@@ -43,12 +43,11 @@ export default function Login() {
     logUserIn(email, password)
       .then(({ user }) => {
         setIsLoading(false);
-        localStorage.setItem("user", JSON.stringify({ name: user.name, email: user.email, picture: user.picture }));
+        localStorage.setItem("user", JSON.stringify(user));
         setUserChanged(!userChanged);
         navigate("/chats");
       })
       .catch((error) => {
-        console.log(error);
         setIsError(true);
         setErrorMessage(error.response.data.message);
         setIsLoading(false);

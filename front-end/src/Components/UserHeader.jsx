@@ -2,18 +2,23 @@ import React, { useContext, useEffect, useState } from "react";
 import "./component-styling/userHeader.css";
 import { Search, X, Bell } from "lucide-react";
 import { UserContext } from "../Context/UserContext";
+import { useNavigate } from "react-router-dom";
+import { searchForUser } from "../api";
+import ErrorModal from "./ErrorModal";
 
 export default function UserHeader() {
-  const [showSearchMenu, setShowSearchMenu] = useState(true);
+  const [showSearchMenu, setShowSearchMenu] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  const [isSearchLoading, seIsSearchLoading] = useState(false);
+  const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [isChatLoading, seIsChatLoading] = useState(false);
-  const [showUserMenu, setShowUserMenu] = useState(true);
+  const [isError, setIsError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showUserMenu, setShowUserMenu] = useState(false);
   const { loggedInUser } = useContext(UserContext);
+  const navigate = useNavigate();
 
-  console.dir(loggedInUser);
-  console.dir(loggedInUser.picture);
+  const user = JSON.parse(localStorage.getItem("user"));
 
   function toggleSearchMenu() {
     setShowSearchMenu(!showSearchMenu);
@@ -23,7 +28,43 @@ export default function UserHeader() {
     setShowUserMenu(!showUserMenu);
   }
 
-  console.log(showUserMenu);
+  function logoutUser() {
+    localStorage.removeItem("user");
+    navigate("/");
+  }
+
+  function handleSearchRequest(event) {
+    if (event.key === "Enter") {
+      if (!searchTerm) return;
+
+      setIsSearchLoading(true);
+
+      console.log(user.token);
+
+      const authorisationConfig = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+
+      searchForUser(searchTerm, authorisationConfig)
+        .then(({ users }) => {
+          console.log(users);
+          setSearchResults(users);
+          setIsSearchLoading(false);
+        })
+        .catch((error) => {
+          setIsError(true);
+          setErrorMessage(error.response.data.message);
+          setIsSearchLoading(false);
+        });
+    }
+  }
+
+  function handleSearchChange(event) {
+    setSearchTerm(event.target.value);
+    setIsError(false);
+  }
 
   return (
     <>
@@ -44,7 +85,9 @@ export default function UserHeader() {
                 </div>
                 <hr></hr>
                 <p className="dropdown-link">My Profile</p>
-                <p className="dropdown-link">Logout</p>
+                <p className="dropdown-link" onClick={logoutUser}>
+                  Logout
+                </p>
               </div>
             </div>
           </div>
@@ -54,10 +97,22 @@ export default function UserHeader() {
         <div className="search-header">
           <Search className="search-icon2"></Search>
           <label htmlFor="search" className="searchbar">
-            <input className="search-bar-input" name="search" type="text" placeholder="Search for users here"></input>
+            <input
+              className="search-bar-input"
+              name="search"
+              type="text"
+              placeholder="Search for users here"
+              value={searchTerm}
+              onChange={handleSearchChange}
+              onKeyDown={handleSearchRequest}
+            ></input>
           </label>
           <X className="close-search" onClick={() => setShowSearchMenu(false)}></X>
         </div>
+        <section id="search-results-container">
+          {isError && <ErrorModal errorMessage={errorMessage} setIsError={setIsError} />}
+          <p></p>
+        </section>
       </div>
       <div className={`background-dimmer ${showSearchMenu === true ? "dim-screen" : ""}`}></div>
     </>
