@@ -1,0 +1,49 @@
+#user-search-list {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: scroll;
+}
+
+.user-card {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: var(--secondary-background-colour);
+  width: 100%;
+  height: 75px;
+  gap: 1em;
+  padding: 0em 1em;
+  border-radius: 1em;
+  &:hover {
+    background-color: var(--brand-colour);
+  }
+}
+
+.user-profile-image {
+  width: 3em;
+  height: 3em;
+  border-radius: 50%;
+}
+
+.user-info-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1em;
+}
+
+.user-card-text {
+  color: var(--primary-text-colour);
+  text-align: start;
+  font-size: 0.8em;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.username {
+  font-size: 1.1em;
+}

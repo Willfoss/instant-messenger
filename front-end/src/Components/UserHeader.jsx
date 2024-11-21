@@ -5,6 +5,8 @@ import { UserContext } from "../Context/UserContext";
 import { useNavigate } from "react-router-dom";
 import { searchForUser } from "../api";
 import ErrorModal from "./ErrorModal";
+import Loading from "./Loading";
+import UserSearchList from "./UserSearchList";
 
 export default function UserHeader() {
   const [showSearchMenu, setShowSearchMenu] = useState(false);
@@ -111,7 +113,8 @@ export default function UserHeader() {
         </div>
         <section id="search-results-container">
           {isError && <ErrorModal errorMessage={errorMessage} setIsError={setIsError} />}
-          <p></p>
+          {isSearchLoading && <Loading />}
+          {!isError && !isSearchLoading && <UserSearchList searchResults={searchResults} />}
         </section>
       </div>
       <div className={`background-dimmer ${showSearchMenu === true ? "dim-screen" : ""}`}></div>

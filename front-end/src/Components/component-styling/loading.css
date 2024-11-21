@@ -1,0 +1,29 @@
+#loading-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 1em 0em;
+  gap: 1em;
+}
+
+.loading {
+  height: 100px;
+  width: 100%;
+  background-color: var(--secondary-background-colour);
+  border-radius: 1em;
+}
+
+.skeleton {
+  animation: skeleton-loading 1s linear infinite alternate;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-color: hsl(200, 9%, 19%);
+  }
+  100% {
+    background-color: hsl(205, 10%, 32%);
+  }
+}
