@@ -6,6 +6,7 @@ import ErrorModal from "./ErrorModal";
 import buttonLoading from "../assets/loading-on-button.json";
 import Lottie from "lottie-react";
 import Header from "./Header";
+import { UserContext } from "../Context/UserContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -16,6 +17,7 @@ export default function Login() {
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+  const { setUserChanged, userChanged } = useContext(UserContext);
 
   function handleEmailChange(event) {
     setEmail(event.target.value);
@@ -41,7 +43,8 @@ export default function Login() {
     logUserIn(email, password)
       .then(({ user }) => {
         setIsLoading(false);
-        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("user", JSON.stringify({ name: user.name, email: user.email, picture: user.picture }));
+        setUserChanged(!userChanged);
         navigate("/chats");
       })
       .catch((error) => {

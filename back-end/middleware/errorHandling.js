@@ -7,7 +7,6 @@ function customErrorHandler(error, request, response, next) {
 }
 
 function serverErrorHandler(error, request, response, next) {
-  console.log(error);
   response.status(500).send({ message: "Internal server error" });
 }
 

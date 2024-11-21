@@ -2,9 +2,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
 }
 
 .signup-page-container {
+  height: calc(100dvh - var(--header-height));
   display: flex;
   width: 100%;
   align-self: stretch;
@@ -132,7 +134,12 @@ input::file-selector-button:hover {
 }
 
 @media screen and (min-width: 768px) {
-  .signup-container {
+  .signup-page-container {
     justify-content: center;
+    align-items: center;
+  }
+
+  .signup-container {
+    margin: 0;
   }
 }

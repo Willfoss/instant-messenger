@@ -14,8 +14,8 @@ function App() {
   return (
     <main>
       <Routes>
-        <Route path="/" element={loggedInUser ? <ChatPage /> : <Login />} />
-        <Route path="/signup" element={loggedInUser ? <ChatPage /> : <Signup />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/chats" element={<ChatPage />} />
       </Routes>
     </main>
