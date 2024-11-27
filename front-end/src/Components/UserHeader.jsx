@@ -8,12 +8,13 @@ import ErrorModal from "./ErrorModal";
 import Loading from "./Loading";
 import UserSearchList from "./UserSearchList";
 
-export default function UserHeader() {
+export default function UserHeader(props) {
+  const { selectedChat, setSelectedChat } = props;
   const [showSearchMenu, setShowSearchMenu] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
-  const [isChatLoading, seIsChatLoading] = useState(false);
+  const [isChatLoading, setIsChatLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -114,7 +115,20 @@ export default function UserHeader() {
         <section id="search-results-container">
           {isError && <ErrorModal errorMessage={errorMessage} setIsError={setIsError} />}
           {isSearchLoading && <Loading />}
-          {!isError && !isSearchLoading && <UserSearchList searchResults={searchResults} />}
+          {!isError && !isSearchLoading && (
+            <section id="user-search-list">
+              {searchResults.map((userResult) => (
+                <UserSearchList
+                  key={userResult._id}
+                  searchedUser={userResult}
+                  user={user}
+                  setIsChatLoading={setIsChatLoading}
+                  setSelectedChat={setSelectedChat}
+                  selectedChat={selectedChat}
+                ></UserSearchList>
+              ))}
+            </section>
+          )}
         </section>
       </div>
       <div className={`background-dimmer ${showSearchMenu === true ? "dim-screen" : ""}`}></div>

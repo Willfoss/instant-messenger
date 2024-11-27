@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { UserContext } from "../Context/UserContext";
 import ChatList from "./ChatList";
 import IndividualChat from "./IndividualChat";
@@ -7,16 +7,20 @@ import UserHeader from "./UserHeader";
 import { useNavigate } from "react-router-dom";
 
 export default function ChatPage() {
-  const { loggedInUser } = useContext(UserContext);
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const [selectedChat, setSelectedChat] = useState();
+  const [chats, setChats] = useState();
+
   const navigate = useNavigate;
 
-  if (!loggedInUser) navigate("/");
+  if (!user) navigate("/");
 
   return (
     <section className="chat-page">
-      <UserHeader />
+      <UserHeader selectedChat={selectedChat} setSelectedChat={setSelectedChat} />
       <div className="chats-container">
-        <ChatList />
+        <ChatList selectedChat={selectedChat} setSelectedChat={setSelectedChat} user={user} chats={chats} setChats={setChats} />
         <IndividualChat />
       </div>
     </section>

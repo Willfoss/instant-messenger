@@ -3,6 +3,7 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
+  padding: 0em 1em;
 }
 
 .login-page-container {
@@ -48,7 +49,7 @@ input,
 }
 
 .guest-button {
-  width: 400px;
+  max-width: 400px;
   margin-top: 1em;
   background-color: red;
   font-weight: bold;

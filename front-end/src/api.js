@@ -27,8 +27,12 @@ export function logUserIn(email, password) {
 }
 
 export function searchForUser(search, authorisation) {
-  console.log(authorisation);
   return jiffyApi.get(`/users?search=${search}`, authorisation).then(({ data }) => {
     return data;
   });
+}
+
+export function accessChat(user_id, authorisation) {
+  console.log(user_id, authorisation);
+  return jiffyApi.post(`/chats`, { user_id }, authorisation);
 }
