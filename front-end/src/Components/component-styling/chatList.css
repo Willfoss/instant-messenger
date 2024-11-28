@@ -2,21 +2,13 @@
   display: none;
 }
 
-.show-chat-list,
-.show-list-and-chat {
+.show-chat-list {
   display: flex;
   flex-direction: column;
   align-items: center;
   background-color: var(--secondary-background-colour);
   border-radius: 0.5em;
   margin: 1em 0em;
-}
-
-.show-list-and-chat {
-  width: 31%;
-}
-
-.show-chat-list {
   width: 100%;
 }
 
@@ -69,19 +61,19 @@
 }
 
 @media screen and (min-width: 768px) {
-  .show-list-and-chat {
+  .show-chat-list {
     width: 45%;
   }
 }
 
 @media screen and (min-width: 900px) {
-  .show-list-and-chat {
+  .show-chat-list {
     width: 38%;
   }
 }
 
 @media screen and (min-width: 1080px) {
-  .show-list-and-chat {
+  .show-chat-list {
     width: 31%;
   }
 }

@@ -1,34 +1,33 @@
-.chat-card {
+.user-card {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  background-color: var(--primary-background-colour);
+  background-color: var(--secondary-background-colour);
   width: 100%;
   height: 75px;
   gap: 1em;
   padding: 0em 1em;
   border-radius: 1em;
-  color: var(--primary-text-colour);
   &:hover {
-    cursor: pointer;
     background-color: var(--brand-colour);
+    cursor: pointer;
   }
 }
 
-.chat-profile-image {
+.user-profile-image {
   width: 3em;
   height: 3em;
   border-radius: 50%;
 }
 
-.chat-info-container {
+.user-info-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 1em;
 }
 
-.chat-card-text {
+.user-card-text {
   color: var(--primary-text-colour);
   text-align: start;
   font-size: 0.8em;
@@ -38,11 +37,6 @@
   font-weight: bold;
 }
 
-.chatname {
+.username {
   font-size: 1.1em;
-}
-
-.selected-chat {
-  background-color: var(--brand-colour);
-  color: black;
 }

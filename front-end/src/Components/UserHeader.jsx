@@ -115,7 +115,7 @@ export default function UserHeader(props) {
         </div>
         <section id="search-results-container">
           {isError && <ErrorModal errorMessage={errorMessage} setIsError={setIsError} />}
-          {isSearchLoading && <Loading />}
+          {isSearchLoading && <Loading skeletons={8} />}
           {!isError && !isSearchLoading && (
             <section id="user-search-list">
               {searchResults.map((userResult) => (

@@ -1,0 +1,37 @@
+.hide-chat {
+  display: none;
+}
+
+.show-chat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--secondary-background-colour);
+  border-radius: 0.5em;
+  margin: 1em 0em;
+  width: 100%;
+}
+
+.chat-name-text,
+.search-users-text {
+  background-color: var(--secondary-background-colour);
+  padding: 0em 1em;
+  color: var(--primary-text-colour);
+}
+
+.chat-name-text:focus,
+.search-users-text:focus {
+  outline: solid 3px #25d366;
+}
+
+::placeholder {
+  color: #fff;
+}
+
+::placeholder:focus {
+  color: transparent;
+}
+
+.text-input:focus::placeholder {
+  opacity: 0;
+}
