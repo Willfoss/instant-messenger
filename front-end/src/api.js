@@ -33,6 +33,13 @@ export function searchForUser(search, authorisation) {
 }
 
 export function accessChat(user_id, authorisation) {
-  console.log(user_id, authorisation);
-  return jiffyApi.post(`/chats`, { user_id }, authorisation);
+  return jiffyApi.post(`/chats`, { user_id }, authorisation).then(({ data }) => {
+    return data;
+  });
+}
+
+export function getAllChatsForLoggedInUser(authorisation) {
+  return jiffyApi.get("/chats", authorisation).then(({ data }) => {
+    return data;
+  });
 }

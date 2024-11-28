@@ -9,7 +9,7 @@ import Loading from "./Loading";
 import UserSearchList from "./UserSearchList";
 
 export default function UserHeader(props) {
-  const { selectedChat, setSelectedChat } = props;
+  const { selectedChat, setSelectedChat, chats, setChats } = props;
   const [showSearchMenu, setShowSearchMenu] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -25,6 +25,10 @@ export default function UserHeader(props) {
 
   function toggleSearchMenu() {
     setShowSearchMenu(!showSearchMenu);
+    if (showSearchMenu === false) {
+      setSearchTerm("");
+      setSearchResults([]);
+    }
   }
 
   function toggleUserMenu() {
@@ -42,8 +46,6 @@ export default function UserHeader(props) {
 
       setIsSearchLoading(true);
 
-      console.log(user.token);
-
       const authorisationConfig = {
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -52,7 +54,6 @@ export default function UserHeader(props) {
 
       searchForUser(searchTerm, authorisationConfig)
         .then(({ users }) => {
-          console.log(users);
           setSearchResults(users);
           setIsSearchLoading(false);
         })
@@ -125,6 +126,9 @@ export default function UserHeader(props) {
                   setIsChatLoading={setIsChatLoading}
                   setSelectedChat={setSelectedChat}
                   selectedChat={selectedChat}
+                  toggleSearchMenu={toggleSearchMenu}
+                  chats={chats}
+                  setChats={setChats}
                 ></UserSearchList>
               ))}
             </section>

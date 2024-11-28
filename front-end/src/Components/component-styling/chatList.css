@@ -1,0 +1,87 @@
+.hide-chat-list {
+  display: none;
+}
+
+.show-chat-list,
+.show-list-and-chat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--secondary-background-colour);
+  border-radius: 0.5em;
+  margin: 1em 0em;
+}
+
+.show-list-and-chat {
+  width: 31%;
+}
+
+.show-chat-list {
+  width: 100%;
+}
+
+.chat-header-container {
+  padding: 1em 1em;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  background-color: var(--secondary-background-colour);
+  justify-content: space-between;
+  align-items: center;
+  border-top-left-radius: 0.5em;
+  border-top-right-radius: 0.5em;
+  color: var(--primary-text-colour);
+}
+
+.chat-heading {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.group-chat {
+  background-color: var(--brand-colour);
+  padding: 0.5em;
+  border-radius: 0.5em;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  color: black;
+  font-weight: bold;
+}
+
+.group-chat:hover {
+  cursor: pointer;
+  background-color: #15853e;
+  color: #fff;
+}
+
+.add {
+  font-size: 1.5em;
+  margin-left: 1em;
+}
+
+.chat-list-container {
+  width: 100%;
+  overflow: auto;
+  height: 100%;
+  padding: 0em 1em;
+}
+
+@media screen and (min-width: 768px) {
+  .show-list-and-chat {
+    width: 45%;
+  }
+}
+
+@media screen and (min-width: 900px) {
+  .show-list-and-chat {
+    width: 38%;
+  }
+}
+
+@media screen and (min-width: 1080px) {
+  .show-list-and-chat {
+    width: 31%;
+  }
+}
