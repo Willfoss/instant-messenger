@@ -4,8 +4,6 @@ import "./component-styling/chatCard.css";
 
 export default function ChatCard(props) {
   const { chat, selectedChat, setSelectedChat, user } = props;
-  console.log(chat);
-  console.log(selectedChat);
 
   function selectChat() {
     setSelectedChat(chat);

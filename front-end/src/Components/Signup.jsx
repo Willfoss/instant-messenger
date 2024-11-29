@@ -29,7 +29,7 @@ export default function Signup() {
   }
 
   function handleEmailChange(event) {
-    setEmail(event.target.value);
+    setEmail(event.target.value.toLowerCase());
     setIsEmailError(false);
   }
 
@@ -67,12 +67,22 @@ export default function Signup() {
 
   function handleSignupSubmit(event) {
     event.preventDefault();
-    setIsLoading(true);
     //error handler for part of form not being filled out
-    if (!name) setIsNameError(true);
-    if (!email) setIsEmailError(true);
-    if (!password) setIsPasswordError(true);
-    if (confirmPassword !== password) setIsConfirmPasswordError(true);
+    if (!name) {
+      setIsNameError(true);
+    }
+    if (!email) {
+      setIsEmailError(true);
+    }
+    if (!password) {
+      setIsPasswordError(true);
+    }
+    if (confirmPassword !== password) {
+      setIsConfirmPasswordError(true);
+      return;
+    }
+
+    setIsLoading(true);
 
     return signUpUser(name, email, password, file)
       .then((data) => {

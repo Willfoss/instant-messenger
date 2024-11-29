@@ -1,0 +1,24 @@
+.not-found-message-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background-color: var(--secondary-background-colour);
+  height: 75px;
+  border-radius: 1em;
+}
+
+.not-found-text {
+  color: #fff;
+  padding: 0em 1em;
+}
+
+#error-section {
+  width: 100%;
+  z-index: 1;
+  align-self: stretch;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

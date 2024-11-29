@@ -37,22 +37,6 @@
   margin-top: 1.5em;
 }
 
-.not-found-message-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  background-color: var(--secondary-background-colour);
-  height: 125px;
-  max-width: 400px;
-  border-radius: 1em;
-}
-
-.not-found-text {
-  color: #fff;
-  padding: 0em 1em;
-}
-
 .close-error {
   font-weight: bold;
   font-size: 25px;

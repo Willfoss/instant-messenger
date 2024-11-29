@@ -2,10 +2,16 @@ import React from "react";
 import "./component-styling/userGroupSearch.css";
 
 export default function UserGroupSearch(props) {
-  const { searchedUser } = props;
+  const { searchedUser, setGroupChatMembers, groupChatMembers } = props;
+
+  function handleAddUserToGroupChat() {
+    if (!groupChatMembers.includes(searchedUser)) {
+      setGroupChatMembers([...groupChatMembers, searchedUser]);
+    }
+  }
 
   return (
-    <div className="user-card">
+    <div className="user-card" onClick={handleAddUserToGroupChat}>
       <img className="user-profile-image" src={searchedUser.picture}></img>
       <div className="user-info-container">
         <p className="user-card-text bold username">{searchedUser.name}</p>

@@ -1,23 +1,33 @@
 import React, { useState } from "react";
 import "./component-styling/createGroup.css";
 import { X } from "lucide-react";
-import { searchForUser } from "../api";
+import { createNewGroupChat, searchForUser } from "../api";
 import Loading from "./Loading";
 import UserGroupSearch from "./UserGroupSearch";
-
+import GroupUserList from "./GroupUserList";
+import Lottie from "lottie-react";
+import buttonLoading from "../assets/loading-on-button.json";
+import ErrorModal from "./ErrorModal";
+import NotFoundError from "./NotFoundError";
 export default function CreateGroup(props) {
   const { setShowCreateGroup, user } = props;
 
   const [groupChatName, setGroupChatName] = useState("");
-  const [groupChatUsers, setGroupChatUsers] = useState([]);
+  const [groupChatMembers, setGroupChatMembers] = useState([]);
+  const [groupChatMembersId, setGroupChatMembersId] = useState([]);
   const [userSearch, setUserSearch] = useState("");
   const [searchedUsersResults, setSearchedUsersResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isGroupNameError, setIsGroupNameError] = useState(false);
+  const [isGroupMemberError, setIsGroupMemberError] = useState(false);
+  const [isNotFoundError, setIsNotFoundError] = useState(false);
 
   function groupChatNameClick(event) {
     setGroupChatName(event.target.value);
+    setIsGroupNameError(false);
   }
 
   function searchedUserClick(event) {
@@ -25,10 +35,20 @@ export default function CreateGroup(props) {
     handleSearchRequest(event.target.value);
   }
 
+  function removeUser(user_id) {
+    const listWithoutUser = groupChatMembers.filter((groupMember) => {
+      return groupMember._id !== user_id;
+    });
+    setGroupChatMembers(listWithoutUser);
+  }
+
   function handleSearchRequest(searchTerm) {
     if (!searchTerm) return;
 
     setIsLoading(true);
+    setIsGroupMemberError(false);
+    setIsNotFoundError(false);
+    setIsError(false);
 
     const authorisationConfig = {
       headers: {
@@ -38,15 +58,51 @@ export default function CreateGroup(props) {
 
     searchForUser(searchTerm, authorisationConfig)
       .then(({ users }) => {
-        console.log(users);
         setSearchedUsersResults(users);
         setIsLoading(false);
       })
       .catch((error) => {
-        setIsError(true);
+        if (error.response.status === 404) {
+          setIsNotFoundError(true);
+        } else {
+          setIsError(true);
+        }
         setErrorMessage(error.response.data.message);
         setIsLoading(false);
       });
+  }
+
+  function handleCreateGroupSubmit(event) {
+    event.preventDefault();
+    if (!groupChatName) {
+      setIsGroupNameError(true);
+    }
+    if (groupChatMembers.length < 2) {
+      setIsGroupMemberError(true);
+    }
+
+    if (groupChatName && groupChatMembers.length > 1) {
+      setIsFormSubmitting(true);
+
+      const authorisationConfig = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+
+      const userIds = groupChatMembers.map((member) => member._id);
+
+      createNewGroupChat(groupChatName, userIds, authorisationConfig)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          setIsError(true);
+          setIsFormSubmitting(false);
+          console.log(error.response.data);
+          setErrorMessage(error.response.data.message);
+        });
+    }
   }
 
   return (
@@ -56,7 +112,8 @@ export default function CreateGroup(props) {
           <h2 className="group-modal-header">Create Group Chat</h2>
           <X className="close-group-modal" onClick={() => setShowCreateGroup(false)}></X>
         </div>
-        <form className="create-group-form">
+        {isError && <ErrorModal errorMessage={errorMessage} />}
+        <form className="create-group-form" onSubmit={handleCreateGroupSubmit}>
           <label htmlFor="group-name">
             <input
               className="chat-name-text"
@@ -66,6 +123,7 @@ export default function CreateGroup(props) {
               value={groupChatName}
               onChange={groupChatNameClick}
             ></input>
+            {isGroupNameError && <p className="group-error-text ">You must provide a group name</p>}
           </label>
           <label htmlFor="search-users">
             <input
@@ -76,18 +134,33 @@ export default function CreateGroup(props) {
               value={userSearch}
               onChange={searchedUserClick}
             ></input>
+            {isGroupMemberError && <p className="group-error-text ">You must provide at least 2 users to add to the group chat</p>}
           </label>
+          <section className="selected-group-members">
+            {groupChatMembers.map((groupMember) => {
+              return <GroupUserList key={groupMember._id} groupMember={groupMember} removeUser={removeUser} />;
+            })}
+          </section>
           <section className="user-search-list">
             {isLoading ? (
               <Loading skeletons={2} />
+            ) : isNotFoundError ? (
+              <NotFoundError errorMessage={errorMessage} />
             ) : (
-              searchedUsersResults.map((user) => {
-                return <UserGroupSearch key={user._id} searchedUser={user} />;
+              searchedUsersResults.slice(0, 5).map((user) => {
+                return (
+                  <UserGroupSearch key={user._id} searchedUser={user} setGroupChatMembers={setGroupChatMembers} groupChatMembers={groupChatMembers} />
+                );
               })
             )}
           </section>
-
-          <button className="create-group-button">Create Group</button>
+          {isFormSubmitting === true ? (
+            <div className="create-group-button-loading">
+              <Lottie className="create-group-loading-animation " animationData={buttonLoading} loop={true} />
+            </div>
+          ) : (
+            <button className="create-group-button">Create Group</button>
+          )}
         </form>
       </div>
     </section>

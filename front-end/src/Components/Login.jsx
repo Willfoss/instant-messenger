@@ -20,7 +20,7 @@ export default function Login() {
   const { setUserChanged, userChanged } = useContext(UserContext);
 
   function handleEmailChange(event) {
-    setEmail(event.target.value);
+    setEmail(event.target.value.toLowerCase());
     setIsEmailError(false);
   }
 
@@ -36,8 +36,13 @@ export default function Login() {
 
   function handleLoginFormSubmit(event) {
     event.preventDefault();
-    if (!email) setIsEmailError(true);
-    if (!password) setIsPasswordError(true);
+    if (!email) {
+      setIsEmailError(true);
+    }
+    if (!password) {
+      setIsPasswordError(true);
+      return;
+    }
     setIsLoading(true);
     setIsError(false);
     logUserIn(email, password)

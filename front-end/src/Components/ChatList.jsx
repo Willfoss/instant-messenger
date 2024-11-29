@@ -25,7 +25,6 @@ export default function ChatList(props) {
 
     getAllChatsForLoggedInUser(authorisationConfig).then(({ chats }) => {
       setChats(chats);
-      console.log(chats);
     });
   }, []);
 

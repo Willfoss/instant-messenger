@@ -43,3 +43,11 @@ export function getAllChatsForLoggedInUser(authorisation) {
     return data;
   });
 }
+
+export function createNewGroupChat(groupName, users, authorisation) {
+  console.log(groupName, users, authorisation);
+  jiffyApi.post("/chats/groups", { group_name: groupName, users }, authorisation).then(({ data }) => {
+    console.log(data);
+    return data;
+  });
+}

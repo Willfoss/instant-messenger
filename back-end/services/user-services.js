@@ -15,7 +15,7 @@ function addNewUser(name, email, password, picture) {
 
   newUser = new User({
     name,
-    email,
+    email: email.toLowerCase(),
     password: hashedPassword,
     picture,
   });
