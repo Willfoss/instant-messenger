@@ -4,7 +4,7 @@
   align-items: center;
   background-color: var(--primary-background-colour);
   width: 100%;
-  height: 75px;
+  min-height: 75px;
   gap: 1em;
   padding: 0em 1em;
   border-radius: 1em;

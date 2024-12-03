@@ -23,8 +23,9 @@
   width: 100%;
   background-color: #991b1b;
   height: 125px;
-  max-width: 400px;
+  max-width: 500px;
   border-radius: 1em;
+  margin: 0.5em 0em;
 }
 
 .error-body {

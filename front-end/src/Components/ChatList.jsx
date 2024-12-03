@@ -5,7 +5,7 @@ import { Plus } from "lucide-react";
 import ChatCard from "./ChatCard";
 
 export default function ChatList(props) {
-  const { selectedChat, setSelectedChat, user, chats, setChats, showCreateGroup, setShowCreateGroup } = props;
+  const { selectedChat, setSelectedChat, user, chats, setChats, showCreateGroup, setShowCreateGroup, getChatsAgain } = props;
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -37,7 +37,7 @@ export default function ChatList(props) {
         setIsError(true);
         setErrorMessage(error.response.data.message);
       });
-  }, []);
+  }, [getChatsAgain]);
 
   useEffect(() => {
     function handleResize() {

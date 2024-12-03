@@ -8,8 +8,6 @@ export default function UserSearchList(props) {
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState();
 
-  console.log(chats);
-
   function getAccessToChat() {
     setIsChatLoading(true);
     setIsError(false);

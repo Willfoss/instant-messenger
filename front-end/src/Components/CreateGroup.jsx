@@ -10,7 +10,7 @@ import buttonLoading from "../assets/loading-on-button.json";
 import ErrorModal from "./ErrorModal";
 import NotFoundError from "./NotFoundError";
 export default function CreateGroup(props) {
-  const { setShowCreateGroup, user } = props;
+  const { setShowCreateGroup, user, chats, setChats } = props;
 
   const [groupChatName, setGroupChatName] = useState("");
   const [groupChatMembers, setGroupChatMembers] = useState([]);
@@ -81,28 +81,31 @@ export default function CreateGroup(props) {
       setIsGroupMemberError(true);
     }
 
-    if (groupChatName && groupChatMembers.length > 1) {
-      setIsFormSubmitting(true);
+    if (isGroupMemberError || isGroupNameError) return;
 
-      const authorisationConfig = {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
+    setIsFormSubmitting(true);
+    setIsError(false);
 
-      const userIds = groupChatMembers.map((member) => member._id);
+    const authorisationConfig = {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    };
 
-      createNewGroupChat(groupChatName, userIds, authorisationConfig)
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((error) => {
-          setIsError(true);
-          setIsFormSubmitting(false);
-          console.log(error.response.data);
-          setErrorMessage(error.response.data.message);
-        });
-    }
+    const userIds = groupChatMembers.map((member) => member._id);
+
+    createNewGroupChat(groupChatName, userIds, authorisationConfig)
+      .then(({ groupChat }) => {
+        console.log(groupChat, "RESULT");
+        setIsFormSubmitting(false);
+        setChats([groupChat, ...chats]);
+        setShowCreateGroup(false);
+      })
+      .catch((error) => {
+        setIsError(true);
+        setIsFormSubmitting(false);
+        setErrorMessage(error.response.data.message);
+      });
   }
 
   return (
@@ -112,7 +115,7 @@ export default function CreateGroup(props) {
           <h2 className="group-modal-header">Create Group Chat</h2>
           <X className="close-group-modal" onClick={() => setShowCreateGroup(false)}></X>
         </div>
-        {isError && <ErrorModal errorMessage={errorMessage} />}
+        {isError && <ErrorModal errorMessage={errorMessage} setIsError={setIsError} />}
         <form className="create-group-form" onSubmit={handleCreateGroupSubmit}>
           <label htmlFor="group-name">
             <input

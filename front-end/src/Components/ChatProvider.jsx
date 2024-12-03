@@ -13,6 +13,7 @@ export default function ChatProvider() {
   const [selectedChat, setSelectedChat] = useState();
   const [chats, setChats] = useState([]);
   const [showCreateGroup, setShowCreateGroup] = useState(true);
+  const [getChatsAgain, setGetChatsAgain] = useState(false);
 
   const navigate = useNavigate;
 
@@ -31,8 +32,14 @@ export default function ChatProvider() {
           setChats={setChats}
           showCreateGroup={showCreateGroup}
           setShowCreateGroup={setShowCreateGroup}
+          getChatsAgain={getChatsAgain}
         />
-        <IndividualChat selectedChat={selectedChat} />
+        <IndividualChat
+          selectedChat={selectedChat}
+          setSelectedChat={setSelectedChat}
+          getChatsAgain={getChatsAgain}
+          setGetChatsAgain={setGetChatsAgain}
+        />
       </div>
     </section>
   );

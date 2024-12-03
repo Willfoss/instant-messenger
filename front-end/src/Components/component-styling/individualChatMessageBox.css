@@ -1,0 +1,51 @@
+.no-chat-selected-box {
+  width: 100%;
+  height: 100%;
+  background-color: var(--secondary-background-colour);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.5em;
+}
+
+.no-chat-selected-text {
+  color: var(--primary-text-colour);
+  font-size: 1.6em;
+}
+
+.chat-box-heading-icon-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1em;
+}
+
+.back-to-chat-list-button,
+.settings-button,
+.users-button {
+  width: 2em;
+  height: 2em;
+}
+
+.chat-box-button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--brand-colour);
+  padding: 0.25em;
+  border-radius: 0.5em;
+  &:hover {
+    cursor: pointer;
+    background-color: var(--brand-hover-colour);
+    color: #fff;
+  }
+}
+
+.chat-name {
+  color: var(--primary-text-colour);
+}
+
+.hide-icon {
+  display: none;
+}
