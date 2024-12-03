@@ -10,11 +10,16 @@ export default function ChatList(props) {
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const [windowPixels, setWindowPixels] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+
   function openCreateGroupOptions() {
     setShowCreateGroup(true);
   }
 
-  useState(() => {
+  useEffect(() => {
     const authorisationConfig = {
       headers: {
         Authorization: `Bearer ${user.token}`,
@@ -34,8 +39,19 @@ export default function ChatList(props) {
       });
   }, []);
 
+  useEffect(() => {
+    function handleResize() {
+      setWindowPixels({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    }
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
-    <section id="chat-list" className={`${selectedChat ? "hide-chat-list" : "show-chat-list"}`}>
+    <section id="chat-list" className={`${selectedChat && windowPixels.width <= 768 ? "hide-chat-list" : "show-chat-list"}`}>
       <div className="chat-header-container">
         <div className="chat-heading">Chats</div>
         <div className="group-chat" onClick={openCreateGroupOptions}>

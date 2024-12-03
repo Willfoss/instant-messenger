@@ -8,6 +8,7 @@
 .chats-container {
   display: flex;
   justify-content: space-between;
+  gap: 1rem;
   padding: 0rem 1rem;
   height: calc(100dvh - var(--header-height));
 }

@@ -4,12 +4,15 @@ import { accessChat } from "../api";
 import ErrorModal from "./ErrorModal";
 
 export default function UserSearchList(props) {
-  const { searchedUser, user, setIsChatLoading, setSelectedChat, toggleSearchMenu, chats } = props;
+  const { searchedUser, user, setIsChatLoading, setSelectedChat, toggleSearchMenu, chats, setChats } = props;
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState();
 
+  console.log(chats);
+
   function getAccessToChat() {
     setIsChatLoading(true);
+    setIsError(false);
 
     const authorisationConfig = {
       headers: {
@@ -19,7 +22,8 @@ export default function UserSearchList(props) {
 
     accessChat(searchedUser._id, authorisationConfig)
       .then(({ chat }) => {
-        if (!chats.find((individualChat) => chat._id === individualChat._id)) setChats([chat, ...chat]);
+        console.log(chat);
+        if (!chats.find((individualChat) => chat._id === individualChat._id)) setChats([chat, ...chats]);
         setIsChatLoading(false);
         setSelectedChat(chat._id);
         toggleSearchMenu();
@@ -27,7 +31,8 @@ export default function UserSearchList(props) {
       .catch((error) => {
         setIsChatLoading(false);
         setIsError(true);
-        setErrorMessage(error.response.data.message);
+        console.log(error);
+        setErrorMessage(error.response);
       });
   }
 

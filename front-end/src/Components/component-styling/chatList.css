@@ -54,26 +54,53 @@
 }
 
 .chat-list-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5em;
   width: 100%;
   overflow: auto;
   height: 100%;
-  padding: 0em 1em;
+  padding: 0em 0.5em;
 }
 
 @media screen and (min-width: 768px) {
   .show-chat-list {
-    width: 45%;
+    width: 55%;
+  }
+  .group-chat {
+    font-size: 0.8em;
+  }
+  .chat-heading {
+    font-size: 1.4em;
+  }
+  .add {
+    margin-left: 0.5em;
+    width: 1em;
+    height: 1em;
   }
 }
 
-@media screen and (min-width: 900px) {
+@media screen and (min-width: 1050px) {
+  .show-chat-list {
+    width: 47%;
+  }
+  .group-chat {
+    font-size: 0.9em;
+  }
+  .chat-heading {
+    font-size: 1.6em;
+  }
+  .add {
+    margin-left: 0.5em;
+  }
+}
+
+@media screen and (min-width: 1300px) {
   .show-chat-list {
     width: 38%;
   }
-}
-
-@media screen and (min-width: 1080px) {
-  .show-chat-list {
-    width: 31%;
+  .group-chat {
+    font-size: 1em;
   }
 }
