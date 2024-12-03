@@ -5,7 +5,16 @@ import { ArrowLeft, Settings, User } from "lucide-react";
 import { getSender, getSenderFullDetails } from "../utils/chatLogic";
 
 export default function IndividualChatMessageBox(props) {
-  const { selectedChat, getChatsAgain, setGetChatsAgain, setSelectedChat, widthPixels, setShowProfileModal, setChattingWithUser } = props;
+  const {
+    selectedChat,
+    getChatsAgain,
+    setGetChatsAgain,
+    setSelectedChat,
+    widthPixels,
+    setShowProfileModal,
+    setChattingWithUser,
+    setShowUpdateGroupChat,
+  } = props;
   const { loggedInUser } = useContext(UserContext);
 
   function handleBackArrowClick() {
@@ -16,6 +25,10 @@ export default function IndividualChatMessageBox(props) {
     const chattingWith = getSenderFullDetails(loggedInUser, selectedChat.users);
     setChattingWithUser(chattingWith);
     setShowProfileModal(true);
+  }
+
+  function handleGroupSettingsClick() {
+    setShowUpdateGroupChat(true);
   }
 
   return (
@@ -30,7 +43,7 @@ export default function IndividualChatMessageBox(props) {
               <>
                 <h2 className="chat-name">{selectedChat.chatName}</h2>
                 <div className="chat-box-button-container">
-                  <Settings className="settings-button" />
+                  <Settings className="settings-button" onClick={handleGroupSettingsClick} />
                 </div>
               </>
             ) : (

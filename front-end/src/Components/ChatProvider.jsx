@@ -7,16 +7,18 @@ import UserHeader from "./UserHeader";
 import { useNavigate } from "react-router-dom";
 import CreateGroup from "./CreateGroup";
 import ProfileModal from "./ProfileModal";
+import UpdateGroupChatModal from "./UpdateGroupChatModal";
 
 export default function ChatProvider() {
   const user = JSON.parse(localStorage.getItem("user"));
 
   const [selectedChat, setSelectedChat] = useState();
   const [chats, setChats] = useState([]);
-  const [showCreateGroup, setShowCreateGroup] = useState(true);
+  const [showCreateGroup, setShowCreateGroup] = useState(false);
   const [getChatsAgain, setGetChatsAgain] = useState(false);
-  const [showProfileModal, setShowProfileModal] = useState(true);
+  const [showProfileModal, setShowProfileModal] = useState(false);
   const [chattingWithUser, setChattingWithUser] = useState({});
+  const [showUpdateGroupChat, setShowUpdateGroupChat] = useState(false);
 
   const navigate = useNavigate;
 
@@ -26,6 +28,16 @@ export default function ChatProvider() {
     <section className="chat-page">
       {showCreateGroup && <CreateGroup user={user} setShowCreateGroup={setShowCreateGroup} chats={chats} setChats={setChats} />}
       {showProfileModal && <ProfileModal setShowProfileModal={setShowProfileModal} user={chattingWithUser.name ? chattingWithUser : user} />}
+      {showUpdateGroupChat && (
+        <UpdateGroupChatModal
+          selectedChat={selectedChat}
+          setSelectedChat={setSelectedChat}
+          user={user}
+          getChatsAgain={getChatsAgain}
+          setGetChatsAgain={setGetChatsAgain}
+          setShowUpdateGroupChat={setShowUpdateGroupChat}
+        />
+      )}
       <UserHeader
         selectedChat={selectedChat}
         setSelectedChat={setSelectedChat}
@@ -52,6 +64,7 @@ export default function ChatProvider() {
           setGetChatsAgain={setGetChatsAgain}
           setShowProfileModal={setShowProfileModal}
           setChattingWithUser={setChattingWithUser}
+          setShowUpdateGroupChat={setShowUpdateGroupChat}
         />
       </div>
     </section>

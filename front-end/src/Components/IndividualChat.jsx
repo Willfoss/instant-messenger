@@ -4,7 +4,7 @@ import IndividualChatMessageBox from "./IndividualChatMessageBox";
 import { UserContext } from "../Context/UserContext";
 
 export default function IndividualChat(props) {
-  const { selectedChat, getChatsAgain, setGetChatsAgain, setSelectedChat, setShowProfileModal, setChattingWithUser } = props;
+  const { selectedChat, getChatsAgain, setGetChatsAgain, setSelectedChat, setShowUpdateGroupChat, setShowProfileModal, setChattingWithUser } = props;
   const { loggedInUser } = useContext(UserContext);
   const [windowPixels, setWindowPixels] = useState({
     width: window.innerWidth,
@@ -32,6 +32,7 @@ export default function IndividualChat(props) {
         widthPixels={windowPixels.width}
         setShowProfileModal={setShowProfileModal}
         setChattingWithUser={setChattingWithUser}
+        setShowUpdateGroupChat={setShowUpdateGroupChat}
       />
     </div>
   );

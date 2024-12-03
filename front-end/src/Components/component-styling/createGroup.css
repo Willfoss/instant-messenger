@@ -93,7 +93,7 @@
 
 .create-group-button:hover {
   cursor: pointer;
-  background-color: #15853e;
+  background-color: var(--brand-hover-colour);
   color: #fff;
 }
 
