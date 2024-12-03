@@ -6,11 +6,9 @@ import ChatCard from "./ChatCard";
 
 export default function ChatList(props) {
   const { selectedChat, setSelectedChat, user, chats, setChats, showCreateGroup, setShowCreateGroup } = props;
-
-  const [windowPixels, setWindowPixels] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  });
+  const [isError, setIsError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   function openCreateGroupOptions() {
     setShowCreateGroup(true);
@@ -22,10 +20,18 @@ export default function ChatList(props) {
         Authorization: `Bearer ${user.token}`,
       },
     };
-
-    getAllChatsForLoggedInUser(authorisationConfig).then(({ chats }) => {
-      setChats(chats);
-    });
+    setIsLoading(true);
+    setIsError(false);
+    getAllChatsForLoggedInUser(authorisationConfig)
+      .then(({ chats }) => {
+        setIsLoading(false);
+        setChats(chats);
+      })
+      .catch((error) => {
+        setIsLoading(false);
+        setIsError(true);
+        setErrorMessage(error.response.data.message);
+      });
   }, []);
 
   return (

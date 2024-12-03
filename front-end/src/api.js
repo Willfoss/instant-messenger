@@ -47,7 +47,6 @@ export function getAllChatsForLoggedInUser(authorisation) {
 export function createNewGroupChat(groupName, users, authorisation) {
   console.log(groupName, users, authorisation);
   jiffyApi.post("/chats/groups", { group_name: groupName, users }, authorisation).then(({ data }) => {
-    console.log(data);
     return data;
   });
 }
