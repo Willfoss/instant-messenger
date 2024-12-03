@@ -9,7 +9,7 @@ import Loading from "./Loading";
 import UserSearchList from "./UserSearchList";
 
 export default function UserHeader(props) {
-  const { selectedChat, setSelectedChat, chats, setChats } = props;
+  const { selectedChat, setSelectedChat, chats, setChats, setShowProfileModal } = props;
   const [showSearchMenu, setShowSearchMenu] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -38,6 +38,11 @@ export default function UserHeader(props) {
   function logoutUser() {
     localStorage.removeItem("user");
     navigate("/");
+  }
+
+  function handleUserProfileClick() {
+    setShowProfileModal(true);
+    setShowUserMenu(false);
   }
 
   function handleSearchRequest(event) {
@@ -88,7 +93,9 @@ export default function UserHeader(props) {
                   <h3 className="name-header">{loggedInUser.name}</h3>
                 </div>
                 <hr></hr>
-                <p className="dropdown-link">My Profile</p>
+                <p className="dropdown-link" onClick={handleUserProfileClick}>
+                  My Profile
+                </p>
                 <p className="dropdown-link" onClick={logoutUser}>
                   Logout
                 </p>

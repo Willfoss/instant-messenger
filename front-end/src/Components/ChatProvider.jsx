@@ -6,6 +6,7 @@ import "./component-styling/chatPage.css";
 import UserHeader from "./UserHeader";
 import { useNavigate } from "react-router-dom";
 import CreateGroup from "./CreateGroup";
+import ProfileModal from "./ProfileModal";
 
 export default function ChatProvider() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -14,6 +15,7 @@ export default function ChatProvider() {
   const [chats, setChats] = useState([]);
   const [showCreateGroup, setShowCreateGroup] = useState(true);
   const [getChatsAgain, setGetChatsAgain] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(true);
 
   const navigate = useNavigate;
 
@@ -22,7 +24,14 @@ export default function ChatProvider() {
   return (
     <section className="chat-page">
       {showCreateGroup && <CreateGroup user={user} setShowCreateGroup={setShowCreateGroup} chats={chats} setChats={setChats} />}
-      <UserHeader selectedChat={selectedChat} setSelectedChat={setSelectedChat} chats={chats} setChats={setChats} />
+      {showProfileModal && <ProfileModal setShowProfileModal={setShowProfileModal} user={user} />}
+      <UserHeader
+        selectedChat={selectedChat}
+        setSelectedChat={setSelectedChat}
+        chats={chats}
+        setChats={setChats}
+        setShowProfileModal={setShowProfileModal}
+      />
       <div className="chats-container">
         <ChatList
           selectedChat={selectedChat}
