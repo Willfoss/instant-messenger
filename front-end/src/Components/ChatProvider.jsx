@@ -16,6 +16,7 @@ export default function ChatProvider() {
   const [showCreateGroup, setShowCreateGroup] = useState(true);
   const [getChatsAgain, setGetChatsAgain] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(true);
+  const [chattingWithUser, setChattingWithUser] = useState({});
 
   const navigate = useNavigate;
 
@@ -24,13 +25,14 @@ export default function ChatProvider() {
   return (
     <section className="chat-page">
       {showCreateGroup && <CreateGroup user={user} setShowCreateGroup={setShowCreateGroup} chats={chats} setChats={setChats} />}
-      {showProfileModal && <ProfileModal setShowProfileModal={setShowProfileModal} user={user} />}
+      {showProfileModal && <ProfileModal setShowProfileModal={setShowProfileModal} user={chattingWithUser.name ? chattingWithUser : user} />}
       <UserHeader
         selectedChat={selectedChat}
         setSelectedChat={setSelectedChat}
         chats={chats}
         setChats={setChats}
         setShowProfileModal={setShowProfileModal}
+        setChattingWithUser={setChattingWithUser}
       />
       <div className="chats-container">
         <ChatList
@@ -48,6 +50,8 @@ export default function ChatProvider() {
           setSelectedChat={setSelectedChat}
           getChatsAgain={getChatsAgain}
           setGetChatsAgain={setGetChatsAgain}
+          setShowProfileModal={setShowProfileModal}
+          setChattingWithUser={setChattingWithUser}
         />
       </div>
     </section>

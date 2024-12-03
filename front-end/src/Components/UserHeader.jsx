@@ -9,7 +9,7 @@ import Loading from "./Loading";
 import UserSearchList from "./UserSearchList";
 
 export default function UserHeader(props) {
-  const { selectedChat, setSelectedChat, chats, setChats, setShowProfileModal } = props;
+  const { selectedChat, setSelectedChat, chats, setChats, setShowProfileModal, setChattingWithUser } = props;
   const [showSearchMenu, setShowSearchMenu] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -41,6 +41,7 @@ export default function UserHeader(props) {
   }
 
   function handleUserProfileClick() {
+    setChattingWithUser("");
     setShowProfileModal(true);
     setShowUserMenu(false);
   }
