@@ -1,8 +1,24 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import "./component-styling/userGroupSearch.css";
+import { addUserToExistinGroupChat } from "../api";
+import { UserContext } from "../Context/UserContext";
+import buttonLoading from "../assets/loading-on-button.json";
 
 export default function UserGroupSearch(props) {
-  const { searchedUser, setGroupChatMembers, groupChatMembers } = props;
+  const {
+    searchedUser,
+    setGroupChatMembers,
+    groupChatMembers,
+    setIsError,
+    setErrorMessage,
+    selectedChat,
+    areUpdatingChatUser,
+    setSelectedChat,
+    getChatsAgain,
+    setGetChatsAgain,
+    setIsUserBeingAdded,
+  } = props;
+  const { loggedInUser } = useContext(UserContext);
 
   function handleAddUserToGroupChat() {
     if (!groupChatMembers.includes(searchedUser)) {
@@ -10,8 +26,38 @@ export default function UserGroupSearch(props) {
     }
   }
 
+  function handleUpdateAddUserGroupChat() {
+    if (selectedChat.users.find((user) => user._id === searchedUser._id)) {
+      setIsError(true);
+      setErrorMessage("This user is already in the group");
+      return;
+    }
+    setIsUserBeingAdded(true);
+    setIsError(false);
+
+    const authorisationConfig = {
+      headers: {
+        Authorization: `Bearer ${loggedInUser.token}`,
+      },
+    };
+
+    console.log();
+
+    addUserToExistinGroupChat(selectedChat._id, searchedUser._id, authorisationConfig)
+      .then(({ groupChat }) => {
+        setSelectedChat(groupChat);
+        setGetChatsAgain(!getChatsAgain);
+        setIsUserBeingAdded(false);
+      })
+      .catch((error) => {
+        setIsUserBeingAdded(false);
+        setIsError(true);
+        setErrorMessage(error.response.data.message);
+      });
+  }
+
   return (
-    <div className="user-card" onClick={handleAddUserToGroupChat}>
+    <div className="user-card" onClick={areUpdatingChatUser ? handleUpdateAddUserGroupChat : handleAddUserToGroupChat}>
       <img className="user-profile-image" src={searchedUser.picture}></img>
       <div className="user-info-container">
         <p className="user-card-text bold username">{searchedUser.name}</p>

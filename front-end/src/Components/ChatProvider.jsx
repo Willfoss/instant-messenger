@@ -26,7 +26,9 @@ export default function ChatProvider() {
 
   return (
     <section className="chat-page">
-      {showCreateGroup && <CreateGroup user={user} setShowCreateGroup={setShowCreateGroup} chats={chats} setChats={setChats} />}
+      {showCreateGroup && (
+        <CreateGroup user={user} setShowCreateGroup={setShowCreateGroup} chats={chats} setChats={setChats} setSelectedChat={setSelectedChat} />
+      )}
       {showProfileModal && <ProfileModal setShowProfileModal={setShowProfileModal} user={chattingWithUser.name ? chattingWithUser : user} />}
       {showUpdateGroupChat && (
         <UpdateGroupChatModal

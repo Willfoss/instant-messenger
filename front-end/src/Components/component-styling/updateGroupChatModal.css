@@ -87,3 +87,8 @@
   background-color: var(--brand-colour-loading);
   font-weight: bold;
 }
+
+.loading-add-user {
+  width: 4em;
+  height: 4em;
+}

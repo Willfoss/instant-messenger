@@ -10,11 +10,10 @@ import buttonLoading from "../assets/loading-on-button.json";
 import ErrorModal from "./ErrorModal";
 import NotFoundError from "./NotFoundError";
 export default function CreateGroup(props) {
-  const { setShowCreateGroup, user, chats, setChats } = props;
+  const { setShowCreateGroup, user, chats, setChats, setSelectedChat } = props;
 
   const [groupChatName, setGroupChatName] = useState("");
   const [groupChatMembers, setGroupChatMembers] = useState([]);
-  const [groupChatMembersId, setGroupChatMembersId] = useState([]);
   const [userSearch, setUserSearch] = useState("");
   const [searchedUsersResults, setSearchedUsersResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -96,12 +95,13 @@ export default function CreateGroup(props) {
 
     createNewGroupChat(groupChatName, userIds, authorisationConfig)
       .then(({ groupChat }) => {
-        console.log(groupChat, "RESULT");
         setIsFormSubmitting(false);
         setChats([groupChat, ...chats]);
+        setSelectedChat(groupChat);
         setShowCreateGroup(false);
       })
       .catch((error) => {
+        console.log(error);
         setIsError(true);
         setIsFormSubmitting(false);
         setErrorMessage(error.response.data.message);

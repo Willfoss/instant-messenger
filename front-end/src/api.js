@@ -55,3 +55,9 @@ export function updateGroupChatName(group_id, groupName, authorisation) {
     return data;
   });
 }
+
+export function addUserToExistinGroupChat(group_chat_id, user_to_add, authorisation) {
+  return jiffyApi.patch("/chats/groups/add", { group_chat_id, user_to_add }, authorisation).then(({ data }) => {
+    return data;
+  });
+}

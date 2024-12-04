@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { X } from "lucide-react";
 import "./component-styling/updateGroupChatModal.css";
 import GroupUserList from "./GroupUserList";
@@ -17,6 +17,7 @@ export default function UpdateGroupChatModal(props) {
   const [userSearch, setUserSearch] = useState("");
   const [searchedUsersResults, setSearchedUsersResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isUserBeingAdded, setIsUserBeingAdded] = useState(false);
   const [isNameChangeSubmitting, setIsNameChangeSubmitting] = useState(false);
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -91,13 +92,11 @@ export default function UpdateGroupChatModal(props) {
 
     updateGroupChatName(selectedChat._id, groupChatName, authorisationConfig)
       .then(({ groupChat }) => {
-        console.log(groupChat);
         setIsNameChangeSubmitting(false);
         setSelectedChat(groupChat);
         setGetChatsAgain(!getChatsAgain);
       })
       .catch((error) => {
-        console.log(error);
         setIsNameChangeSubmitting(false);
         setIsError(true);
         setErrorMessage(error.response.data.message);
@@ -112,7 +111,7 @@ export default function UpdateGroupChatModal(props) {
           <X className="close-update-group-modal" onClick={handleModalClose}></X>
         </div>
         <section className="group-members">
-          {groupChatMembers.map((groupMember) => {
+          {selectedChat.users.map((groupMember) => {
             return <GroupUserList key={groupMember._id} groupMember={groupMember} removeUser={removeUser} />;
           })}
         </section>
@@ -136,14 +135,15 @@ export default function UpdateGroupChatModal(props) {
           </label>
 
           <label htmlFor="search-users">
-            <p className="update-group-chat-label">Add users</p>
+            <p className="update-group-chat-label">Add users (admin only)</p>
             <input
-              className="search-users-text"
+              className={`search-users-text`}
               name="search-users"
               type="text"
-              placeholder="Search For Users"
+              placeholder={user._id === selectedChat.groupAdmin._id ? "Search For Users" : "Only a group admin can edit this"}
               value={userSearch}
               onChange={searchedUserChange}
+              disabled={user._id === selectedChat.groupAdmin._id ? false : true}
             ></input>
           </label>
           <section className="user-search-list">
@@ -151,10 +151,25 @@ export default function UpdateGroupChatModal(props) {
               <Loading skeletons={2} />
             ) : isNotFoundError ? (
               <NotFoundError errorMessage={errorMessage} />
+            ) : isUserBeingAdded ? (
+              <Lottie className="loading-add-user" animationData={buttonLoading} loop={true} />
             ) : (
               searchedUsersResults.slice(0, 5).map((user) => {
                 return (
-                  <UserGroupSearch key={user._id} searchedUser={user} setGroupChatMembers={setGroupChatMembers} groupChatMembers={groupChatMembers} />
+                  <UserGroupSearch
+                    key={user._id}
+                    searchedUser={user}
+                    setGroupChatMembers={setGroupChatMembers}
+                    groupChatMembers={groupChatMembers}
+                    setIsError={setIsError}
+                    setErrorMessage={setErrorMessage}
+                    setIsUserBeingAdded={setIsUserBeingAdded}
+                    selectedChat={selectedChat}
+                    areUpdatingChatUser={true}
+                    getChatsAgain={getChatsAgain}
+                    setSelectedChat={setSelectedChat}
+                    setGetChatsAgain={setGetChatsAgain}
+                  />
                 );
               })
             )}
