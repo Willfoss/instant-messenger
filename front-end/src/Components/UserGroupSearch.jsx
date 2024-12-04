@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import "./component-styling/userGroupSearch.css";
 import { addUserToExistinGroupChat } from "../api";
 import { UserContext } from "../Context/UserContext";
-import buttonLoading from "../assets/loading-on-button.json";
 
 export default function UserGroupSearch(props) {
   const {
@@ -16,7 +15,7 @@ export default function UserGroupSearch(props) {
     setSelectedChat,
     getChatsAgain,
     setGetChatsAgain,
-    setIsUserBeingAdded,
+    setIsUserBeingAltered,
   } = props;
   const { loggedInUser } = useContext(UserContext);
 
@@ -32,7 +31,7 @@ export default function UserGroupSearch(props) {
       setErrorMessage("This user is already in the group");
       return;
     }
-    setIsUserBeingAdded(true);
+    setIsUserBeingAltered(true);
     setIsError(false);
 
     const authorisationConfig = {
@@ -41,16 +40,14 @@ export default function UserGroupSearch(props) {
       },
     };
 
-    console.log();
-
     addUserToExistinGroupChat(selectedChat._id, searchedUser._id, authorisationConfig)
       .then(({ groupChat }) => {
         setSelectedChat(groupChat);
         setGetChatsAgain(!getChatsAgain);
-        setIsUserBeingAdded(false);
+        setIsUserBeingAltered(false);
       })
       .catch((error) => {
-        setIsUserBeingAdded(false);
+        setIsUserBeingAltered(false);
         setIsError(true);
         setErrorMessage(error.response.data.message);
       });

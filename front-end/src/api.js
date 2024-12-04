@@ -61,3 +61,9 @@ export function addUserToExistinGroupChat(group_chat_id, user_to_add, authorisat
     return data;
   });
 }
+
+export function removeUserFromExistingGroupChat(group_chat_id, user_to_remove, authorisation) {
+  return jiffyApi.patch("/chats/groups/remove", { group_chat_id, user_to_remove }, authorisation).then(({ data }) => {
+    return data;
+  });
+}

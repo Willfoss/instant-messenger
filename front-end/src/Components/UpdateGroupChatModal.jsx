@@ -5,7 +5,7 @@ import GroupUserList from "./GroupUserList";
 import Loading from "./Loading";
 import NotFoundError from "./NotFoundError";
 import UserGroupSearch from "./UserGroupSearch";
-import { searchForUser, updateGroupChatName } from "../api";
+import { removeUserFromExistingGroupChat, searchForUser, updateGroupChatName } from "../api";
 import Lottie from "lottie-react";
 import buttonLoading from "../assets/loading-on-button.json";
 import ErrorModal from "./ErrorModal";
@@ -17,7 +17,7 @@ export default function UpdateGroupChatModal(props) {
   const [userSearch, setUserSearch] = useState("");
   const [searchedUsersResults, setSearchedUsersResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isUserBeingAdded, setIsUserBeingAdded] = useState(false);
+  const [isUserBeingAltered, setIsUserBeingAltered] = useState(false);
   const [isNameChangeSubmitting, setIsNameChangeSubmitting] = useState(false);
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -103,6 +103,31 @@ export default function UpdateGroupChatModal(props) {
       });
   }
 
+  function handleUpdateRemoveUser(groupMember_id) {
+    setIsUserBeingAltered(true);
+    setIsError(false);
+
+    const authorisationConfig = {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    };
+    console.log(groupMember_id);
+    removeUserFromExistingGroupChat(selectedChat._id, groupMember_id, authorisationConfig)
+      .then(({ groupChat }) => {
+        console.log(groupChat);
+        groupMember_id === user._id ? setSelectedChat() : setSelectedChat(groupChat);
+        setGetChatsAgain(!getChatsAgain);
+        setIsUserBeingAltered(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsUserBeingAltered(false);
+        setIsError(true);
+        setErrorMessage(error.response.data.message);
+      });
+  }
+
   return (
     <section id="create-group">
       <div className="update-group-modal-container">
@@ -112,7 +137,16 @@ export default function UpdateGroupChatModal(props) {
         </div>
         <section className="group-members">
           {selectedChat.users.map((groupMember) => {
-            return <GroupUserList key={groupMember._id} groupMember={groupMember} removeUser={removeUser} />;
+            return (
+              <GroupUserList
+                key={groupMember._id}
+                groupMember={groupMember}
+                selectedChat={selectedChat}
+                removeUser={removeUser}
+                handleUpdateRemoveUser={handleUpdateRemoveUser}
+                areUpdatingChatUser={true}
+              />
+            );
           })}
         </section>
         {isError && <ErrorModal errorMessage={errorMessage} setIsError={setIsError} />}
@@ -151,7 +185,7 @@ export default function UpdateGroupChatModal(props) {
               <Loading skeletons={2} />
             ) : isNotFoundError ? (
               <NotFoundError errorMessage={errorMessage} />
-            ) : isUserBeingAdded ? (
+            ) : isUserBeingAltered ? (
               <Lottie className="loading-add-user" animationData={buttonLoading} loop={true} />
             ) : (
               searchedUsersResults.slice(0, 5).map((user) => {
@@ -163,7 +197,7 @@ export default function UpdateGroupChatModal(props) {
                     groupChatMembers={groupChatMembers}
                     setIsError={setIsError}
                     setErrorMessage={setErrorMessage}
-                    setIsUserBeingAdded={setIsUserBeingAdded}
+                    setIsUserBeingAltered={setIsUserBeingAltered}
                     selectedChat={selectedChat}
                     areUpdatingChatUser={true}
                     getChatsAgain={getChatsAgain}
@@ -174,6 +208,9 @@ export default function UpdateGroupChatModal(props) {
               })
             )}
           </section>
+          <button className="leave-group-button" onClick={() => handleUpdateRemoveUser(user._id)}>
+            Leave Group
+          </button>
         </form>
       </div>
     </section>
