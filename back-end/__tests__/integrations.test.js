@@ -1106,17 +1106,6 @@ describe("back end testing", () => {
           expect(body.groupChat.hasOwnProperty("group_slug")).toBe(false);
         });
     });
-    test("PATCH remove user from group chat 400: Will not remove a user if only 3 people are in a group chat", () => {
-      return request(app)
-        .patch("/api/chats/groups/remove")
-        .send({ group_chat_id: groupChatId, user_to_remove: chatHazelUserId })
-        .set({ authorization: `Bearer ${jwt}` })
-        .expect(400)
-        .then(({ body }) => {
-          expect(body.message).toBe("The are too few members to remove somebody from this group");
-        });
-    });
-
     test("PATCH remove user from group chat 401: cannot manipulate group chat members if user is not authorised", () => {
       return request(app)
         .patch("/api/chats/groups/remove")

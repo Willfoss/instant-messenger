@@ -144,11 +144,8 @@ function removeGroupMember(group_chat_id, user_to_remove) {
       if (!chat) {
         return Promise.reject({ status: 404, message: "This group chat does not exist" });
       }
-      if (chat.users.length === 2) {
+      if (chat.isGroupChat === false) {
         return Promise.reject({ status: 400, message: "Only a group chat can remove users" });
-      }
-      if (chat.users.length < 4) {
-        return Promise.reject({ status: 400, message: "The are too few members to remove somebody from this group" });
       }
       if (chat.isGroupChat === false) {
         return Promise.reject({ status: 400, message: "Only a group chat can remove users" });
