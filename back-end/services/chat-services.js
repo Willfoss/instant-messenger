@@ -16,7 +16,7 @@ function getAccessChat(user_id, user) {
     .then((isChat) => {
       return User.populate(isChat, {
         path: "latestMessage.sender",
-        select: "name, picture, email",
+        select: "name picture email",
       });
     })
     .then((chat) => {
@@ -62,7 +62,7 @@ function fetchAllChatsForUser(user) {
       } else {
         return User.populate(chats, {
           path: "latestMessage.sender",
-          select: "name, picture, email",
+          select: "name picture email",
         });
       }
     });
