@@ -1234,7 +1234,7 @@ describe("back end testing", () => {
           });
       });
     });
-    describe.only("POST new message to group chat testing", () => {
+    describe("POST new message to group chat testing", () => {
       test("POST message 201: responds with the message object that was just posted", () => {
         return request(app)
           .post("/api/messages")
@@ -1319,6 +1319,145 @@ describe("back end testing", () => {
           .then(({ body }) => {
             expect(body.message).toBe("User not authorised");
           });
+      });
+    });
+    describe.only("GET messages by chat_id testing", () => {
+      let loggedInUserId2 = "";
+      let loggedInUserId3 = "";
+      let messageId1 = "";
+      let messageId2 = "";
+      let messageId3 = "";
+      //create some messages in a chat
+      beforeEach(() => {
+        return request(app)
+          .post("/api/messages")
+          .send({ message: "what's up guys?", chat_id: groupChatId })
+          .set({ authorization: `Bearer ${jwt}` })
+          .then(({ body }) => {
+            messageId1 = body.message._id;
+          });
+      });
+      //deeper describe block to allow for another user to post
+      describe("GET messages by chat_id testing. separate block to allow a message post from a second user", () => {
+        //log in second user
+        beforeEach(() => {
+          return request(app)
+            .post("/api/users/login")
+            .send({ email: "bob_marley@outlook.com", password: "password234" })
+            .then(({ body }) => {
+              jwt = body.user.token;
+              loggedInUserId2 = body.user._id;
+            });
+        });
+        //create messages from second user
+        beforeEach(() => {
+          return request(app)
+            .post("/api/messages")
+            .send({ message: "not much, you?", chat_id: groupChatId })
+            .set({ authorization: `Bearer ${jwt}` })
+            .then(({ body }) => {
+              messageId2 = body.message._id;
+            });
+        });
+        describe("GET messages by chat_id testing. separate block to allow a message post from a third user", () => {
+          //log in third user
+          beforeEach(() => {
+            return request(app)
+              .post("/api/users/login")
+              .send({ email: "willfoster@email.com", password: "password123" })
+              .then(({ body }) => {
+                jwt = body.user.token;
+                loggedInUserId3 = body.user._id;
+              });
+          });
+          //create messages from third user
+          beforeEach(() => {
+            return request(app)
+              .post("/api/messages")
+              .send({ message: "yeah all good buddy", chat_id: groupChatId })
+              .set({ authorization: `Bearer ${jwt}` })
+              .then(({ body }) => {
+                messageId3 = body.message._id;
+              });
+          });
+
+          test("GET messages by chat_id 200: returns all messages in a given chat id", () => {
+            return request(app)
+              .get(`/api/messages/${groupChatId}`)
+              .set({ authorization: `Bearer ${jwt}` })
+              .expect(200)
+              .then(({ body }) => {
+                expect(body.messages.length).toBe(3);
+                expect(body.messages[0]).toMatchObject({
+                  _id: messageId1,
+                  sender: {
+                    name: "will fossard",
+                    email: "willfossard@outlook.com",
+                    picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                  },
+                  content: "what's up guys?",
+                  chat: {
+                    _id: groupChatId,
+                    chatName: "test-group",
+                    isGroupChat: true,
+                    users: [loggedInUserId3, loggedInUserId2, loggedInUserId],
+                    groupAdmin: loggedInUserId,
+                    createdAt: expect.any(String),
+                    updatedAt: expect.any(String),
+                    latestMessage: messageId3,
+                  },
+                  createdAt: expect.any(String),
+                  updatedAt: expect.any(String),
+                });
+                expect(body.messages[1]).toMatchObject({
+                  _id: messageId2,
+                  sender: {
+                    name: "bob marley",
+                    email: "bob_marley@outlook.com",
+                    picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                  },
+                  content: "not much, you?",
+                  chat: {
+                    _id: groupChatId,
+                    chatName: "test-group",
+                    isGroupChat: true,
+                    users: [loggedInUserId3, loggedInUserId2, loggedInUserId],
+                    groupAdmin: loggedInUserId,
+                    createdAt: expect.any(String),
+                    updatedAt: expect.any(String),
+                    latestMessage: messageId3,
+                  },
+                  createdAt: expect.any(String),
+                  updatedAt: expect.any(String),
+                  createdAt: expect.any(String),
+                  updatedAt: expect.any(String),
+                });
+                expect(body.messages[2]).toMatchObject({
+                  _id: messageId3,
+                  sender: {
+                    name: "will foster",
+                    email: "willfoster@email.com",
+                    picture: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                  },
+                  content: "yeah all good buddy",
+                  chat: {
+                    _id: groupChatId,
+                    chatName: "test-group",
+                    isGroupChat: true,
+                    users: [loggedInUserId3, loggedInUserId2, loggedInUserId],
+                    groupAdmin: loggedInUserId,
+                    createdAt: expect.any(String),
+                    updatedAt: expect.any(String),
+                    latestMessage: messageId3,
+                  },
+                  createdAt: expect.any(String),
+                  updatedAt: expect.any(String),
+                  createdAt: expect.any(String),
+                  updatedAt: expect.any(String),
+                });
+              });
+          });
+        });
       });
     });
   });

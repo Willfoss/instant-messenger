@@ -32,12 +32,16 @@ function postMessage(message, chat_id, user) {
     })
     .then(([latestMessage, sentMessage]) => {
       return sentMessage;
-    })
-    .catch((error) => {
-      console.log(error);
     });
 }
 
-function fetchAllMessagesInChat(chat_id, user) {}
+function fetchAllMessagesInChat(chat_id, user) {
+  return Message.find({ chat: chat_id })
+    .populate("sender", "_id name email picture")
+    .populate("chat")
+    .then((messages) => {
+      return messages;
+    });
+}
 
 module.exports = { postMessage, fetchAllMessagesInChat };
