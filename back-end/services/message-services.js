@@ -2,7 +2,7 @@ const { Chat } = require("../models/chat-models");
 const Message = require("../models/message-model");
 const { User } = require("../models/user-model");
 
-async function postMessage(message, chat_id, user) {
+function postMessage(message, chat_id, user) {
   if (!message || !chat_id) {
     return Promise.reject({ status: 400, message: "Both a message and a valid chat_id are required" });
   }
@@ -38,4 +38,6 @@ async function postMessage(message, chat_id, user) {
     });
 }
 
-module.exports = { postMessage };
+function fetchAllMessagesInChat(chat_id, user) {}
+
+module.exports = { postMessage, fetchAllMessagesInChat };

@@ -1,4 +1,4 @@
-const { postMessage } = require("../services/message-services");
+const { postMessage, fetchAllMessagesInChat } = require("../services/message-services");
 
 function sendMessage(request, response, next) {
   const { message, chat_id } = request.body;
@@ -12,4 +12,17 @@ function sendMessage(request, response, next) {
     });
 }
 
-module.exports = { sendMessage };
+function getAllMessagesInChat(request, response, next) {
+  const { chat_id } = request.params;
+  const { user } = request;
+
+  fetchAllMessagesInChat(chat_id, user)
+    .then((messages) => {
+      response.send({ messages });
+    })
+    .catch((error) => {
+      next(error);
+    });
+}
+
+module.exports = { sendMessage, getAllMessagesInChat };
