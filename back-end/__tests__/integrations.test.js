@@ -1321,7 +1321,7 @@ describe("back end testing", () => {
           });
       });
     });
-    describe.only("GET messages by chat_id testing", () => {
+    describe("GET messages by chat_id testing", () => {
       let loggedInUserId2 = "";
       let loggedInUserId3 = "";
       let messageId1 = "";
