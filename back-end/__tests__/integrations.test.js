@@ -1457,6 +1457,14 @@ describe("back end testing", () => {
                 });
               });
           });
+          test("GET messages by chat_id 200: returns all messages in a given chat id", () => {
+            return request(app)
+              .get(`/api/messages/${groupChatId}`)
+              .expect(401)
+              .then(({ body }) => {
+                expect(body.message).toBe("User not authorised");
+              });
+          });
         });
       });
     });
