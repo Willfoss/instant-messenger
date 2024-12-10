@@ -1,0 +1,66 @@
+#messages {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5em;
+}
+
+.individual-message-container {
+  display: flex;
+  align-self: flex-start;
+}
+
+.space-holder-for-picture {
+  width: 2em;
+  height: 2em;
+}
+
+.in-chat-picture {
+  width: 2em;
+  height: 2em;
+  border-radius: 50%;
+  &:hover {
+    outline: 2px solid var(--brand-colour);
+    cursor: pointer;
+  }
+}
+
+.group-chat-member-message-container,
+.group-chat-loggedInUser-message-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  padding: 0.5em;
+  border-radius: 0.5em;
+}
+
+.group-chat-member-message-container {
+  background-color: gray;
+}
+
+.group-chat-loggedInUser-message-container {
+  background-color: var(--brand-colour);
+}
+
+.individual-message-container-you-sent-message,
+.individual-message-container {
+  gap: 0.5em;
+  justify-content: center;
+  align-items: center;
+  padding: 0em 0.5em;
+  max-width: 65%;
+}
+
+.message-time {
+  font-weight: 600;
+  align-self: flex-end;
+}
+
+.chat-date {
+  align-self: center;
+  background-color: var(--secondary-background-colour);
+  padding: 0.2em 0.5em;
+  border-radius: 0.5em;
+  color: var(--primary-text-colour);
+}

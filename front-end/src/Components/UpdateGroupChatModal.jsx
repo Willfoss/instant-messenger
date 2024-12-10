@@ -112,16 +112,14 @@ export default function UpdateGroupChatModal(props) {
         Authorization: `Bearer ${user.token}`,
       },
     };
-    console.log(groupMember_id);
+
     removeUserFromExistingGroupChat(selectedChat._id, groupMember_id, authorisationConfig)
       .then(({ groupChat }) => {
-        console.log(groupChat);
         groupMember_id === user._id ? setSelectedChat() : setSelectedChat(groupChat);
         setGetChatsAgain(!getChatsAgain);
         setIsUserBeingAltered(false);
       })
       .catch((error) => {
-        console.log(error);
         setIsUserBeingAltered(false);
         setIsError(true);
         setErrorMessage(error.response.data.message);

@@ -67,3 +67,15 @@ export function removeUserFromExistingGroupChat(group_chat_id, user_to_remove, a
     return data;
   });
 }
+
+export function sendNewMessage(chat_id, message, authorisation) {
+  return jiffyApi.post("/messages", { chat_id, message }, authorisation).then(({ data }) => {
+    return data;
+  });
+}
+
+export function getAllMessagesForChat(chat_id, authorisation) {
+  return jiffyApi.get(`messages/${chat_id}`, authorisation).then(({ data }) => {
+    return data;
+  });
+}
