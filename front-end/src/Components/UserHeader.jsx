@@ -48,34 +48,35 @@ export default function UserHeader(props) {
     setShowUserMenu(false);
   }
 
-  function handleSearchRequest(event) {
-    if (event.key === "Enter") {
-      if (!searchTerm) return;
-
-      setIsSearchLoading(true);
-
-      const authorisationConfig = {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
-
-      searchForUser(searchTerm, authorisationConfig)
-        .then(({ users }) => {
-          setSearchResults(users);
-          setIsSearchLoading(false);
-        })
-        .catch((error) => {
-          setIsError(true);
-          setErrorMessage(error.response.data.message);
-          setIsSearchLoading(false);
-        });
-    }
-  }
-
   function handleSearchChange(event) {
     setSearchTerm(event.target.value);
-    setIsError(false);
+    handleSearchRequest(event.target.value);
+  }
+
+  function handleSearchRequest(search) {
+    if (!search) {
+      return;
+    }
+
+    setIsSearchLoading(true);
+
+    const authorisationConfig = {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    };
+
+    console.log(search);
+    searchForUser(search, authorisationConfig)
+      .then(({ users }) => {
+        setSearchResults(users);
+        setIsSearchLoading(false);
+      })
+      .catch((error) => {
+        setIsError(true);
+        setErrorMessage(error.response.data.message);
+        setIsSearchLoading(false);
+      });
   }
 
   return (
@@ -119,7 +120,6 @@ export default function UserHeader(props) {
               value={searchTerm}
               ref={searchInput}
               onChange={handleSearchChange}
-              onKeyDown={handleSearchRequest}
             ></input>
           </label>
           <X className="close-search" onClick={() => setShowSearchMenu(false)}></X>
