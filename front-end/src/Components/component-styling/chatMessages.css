@@ -12,8 +12,9 @@
 }
 
 .space-holder-for-picture {
-  width: 2em;
-  height: 2em;
+  width: 32px !important;
+  height: 32px !important;
+  background-color: var(--primary-background-colour);
 }
 
 .in-chat-picture {
@@ -37,6 +38,7 @@
 
 .group-chat-member-message-container {
   background-color: gray;
+  flex: 1;
 }
 
 .group-chat-loggedInUser-message-container {
