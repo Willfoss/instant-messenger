@@ -82,7 +82,6 @@ export default function IndividualChatMessageBox(props) {
 
     sendNewMessage(selectedChat._id, newMessage, authorisationConfig)
       .then(({ message }) => {
-        console.log(message);
         setNewMessage("");
         setMessages([...messages, message]);
         setIsMessageSending(false);

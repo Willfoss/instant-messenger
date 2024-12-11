@@ -67,7 +67,6 @@ export default function UserHeader(props) {
       },
     };
 
-    console.log(search);
     searchForUser(search, authorisationConfig)
       .then(({ users }) => {
         setSearchResults(users);

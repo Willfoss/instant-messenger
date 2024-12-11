@@ -20,10 +20,9 @@ export default function UserSearchList(props) {
 
     accessChat(searchedUser._id, authorisationConfig)
       .then(({ chat }) => {
-        console.log(chat);
         if (!chats.find((individualChat) => chat._id === individualChat._id)) setChats([chat, ...chats]);
         setIsChatLoading(false);
-        setSelectedChat(chat._id);
+        setSelectedChat(chat);
         toggleSearchMenu();
       })
       .catch((error) => {
