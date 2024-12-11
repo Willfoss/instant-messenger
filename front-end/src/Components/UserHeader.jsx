@@ -59,6 +59,7 @@ export default function UserHeader(props) {
     }
 
     setIsSearchLoading(true);
+    setIsError(false);
 
     const authorisationConfig = {
       headers: {
