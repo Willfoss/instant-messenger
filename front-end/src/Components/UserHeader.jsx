@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import "./component-styling/userHeader.css";
 import { Search, X, Bell } from "lucide-react";
 import { UserContext } from "../Context/UserContext";
@@ -19,6 +19,7 @@ export default function UserHeader(props) {
   const [errorMessage, setErrorMessage] = useState("");
   const [showUserMenu, setShowUserMenu] = useState(false);
   const { loggedInUser } = useContext(UserContext);
+  const searchInput = useRef(null);
   const navigate = useNavigate();
 
   const user = JSON.parse(localStorage.getItem("user"));
@@ -28,6 +29,7 @@ export default function UserHeader(props) {
     if (showSearchMenu === false) {
       setSearchTerm("");
       setSearchResults([]);
+      searchInput.current.focus();
     }
   }
 
@@ -115,6 +117,7 @@ export default function UserHeader(props) {
               type="text"
               placeholder="Search for users here"
               value={searchTerm}
+              ref={searchInput}
               onChange={handleSearchChange}
               onKeyDown={handleSearchRequest}
             ></input>
