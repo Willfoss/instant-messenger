@@ -29,7 +29,7 @@ export default function ChatMessages(props) {
                 (isSameSender(messages, message, index, loggedInUser._id) || isLastMessageOfUser(messages, index, loggedInUser._id)) ? (
                   <img className="in-chat-picture" src={message.sender.picture} onClick={() => viewUserProfileClick(message)}></img>
                 ) : (
-                  loggedInUser._id !== message.sender._id && <div className="space-holder-for-picture"></div>
+                  selectedChat.isGroupChat && loggedInUser._id !== message.sender._id && <div className="space-holder-for-picture"></div>
                 )}
                 <div
                   className={`${
