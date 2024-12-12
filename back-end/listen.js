@@ -18,7 +18,6 @@ socketIo.on("connection", (socket) => {
 
   socket.on("setup", (userData) => {
     socket.join(userData._id);
-    console.log(userData._id);
     socket.emit("connected");
   });
 
@@ -26,6 +25,9 @@ socketIo.on("connection", (socket) => {
     socket.join(chat);
     console.log(`user joined chat: ${chat}`);
   });
+
+  socket.on("typing", (chat) => socket.in(chat).emit("typing", chat));
+  socket.on("stop typing", (chat) => socket.in(chat).emit("stop typing", chat));
 
   socket.on("new message", (newMessageReceived) => {
     let chat = newMessageReceived.chat;

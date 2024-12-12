@@ -4,6 +4,7 @@ import "./component-styling/individualChatMessageBox.css";
 import { ArrowLeft, Settings, User } from "lucide-react";
 import { getSender, getSenderFullDetails } from "../utils/chatLogic";
 import buttonLoading from "../assets/loading-on-button.json";
+import typing from "../assets/typing-animation";
 import Lottie from "lottie-react";
 import { SendHorizontal } from "lucide-react";
 import { getAllMessagesForChat, sendNewMessage } from "../api";
@@ -32,7 +33,19 @@ export default function IndividualChatMessageBox(props) {
   const [errorMessage, setErrorMessage] = useState("");
   const { loggedInUser } = useContext(UserContext);
   const [socketConnected, setSocketConnected] = useState(false);
+  const [isUserTyping, setIsUserTyping] = useState(false);
+  const [isLoggedInUserTyping, setIsLoggedInUserTyping] = useState(false);
+  const [socketIoRoom, setSocketIoRoom] = useState(null);
+  const [timer, setTimer] = useState(0);
   const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    socket = io(ENDPOINT);
+    socket.emit("setup", loggedInUser);
+    socket.on("connected", () => {
+      setSocketConnected(true);
+    });
+  }, []);
 
   function handleBackArrowClick() {
     setSelectedChat("");
@@ -48,18 +61,6 @@ export default function IndividualChatMessageBox(props) {
     setShowUpdateGroupChat(true);
   }
 
-  function handleSendMessageChange(event) {
-    setNewMessage(event.target.value);
-  }
-
-  useEffect(() => {
-    socket = io(ENDPOINT);
-    socket.emit("setup", loggedInUser);
-    socket.on("connection", () => {
-      setSocketConnected(true);
-    });
-  }, []);
-
   useEffect(() => {
     getMessages();
     selectedChatCompare = selectedChat;
@@ -72,6 +73,13 @@ export default function IndividualChatMessageBox(props) {
       } else {
         setMessages([...messages, newMessageReceived]);
       }
+    });
+    socket.on("typing", (chat) => {
+      setSocketIoRoom(chat);
+      setIsUserTyping(true);
+    });
+    socket.on("stop typing", () => {
+      setIsUserTyping(false);
     });
   });
 
@@ -104,11 +112,12 @@ export default function IndividualChatMessageBox(props) {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [messages, isUserTyping]);
 
   function handleButtonSendMessage() {
     setIsMessageSending(true);
     setIsError(false);
+    socket.emit("stop typing", selectedChat._id);
 
     const authorisationConfig = {
       headers: {
@@ -135,6 +144,27 @@ export default function IndividualChatMessageBox(props) {
       event.preventDefault();
       handleButtonSendMessage();
     }
+  }
+
+  function handleSendMessageChange(event) {
+    setSocketIoRoom(selectedChat._id);
+    setNewMessage(event.target.value);
+    if (!socketConnected) return;
+    if (!isLoggedInUserTyping) {
+      setIsLoggedInUserTyping(true);
+      socket.emit("typing", selectedChat._id);
+    }
+
+    if (timer) {
+      clearTimeout(timer);
+    }
+
+    const typingTimer = setTimeout(() => {
+      socket.emit("stop typing", selectedChat._id);
+      setIsLoggedInUserTyping(false);
+    }, 3000);
+
+    setTimer(typingTimer);
   }
 
   return (
@@ -176,7 +206,13 @@ export default function IndividualChatMessageBox(props) {
                 </div>
               )}
               <div ref={messagesEndRef}></div>
+              {isUserTyping && socketIoRoom === selectedChat._id && (
+                <div className="typing">
+                  <Lottie className="typing-animation" animationData={typing} loop={true} />
+                </div>
+              )}
             </div>
+
             <form id="send-message-form">
               <label className="send-message-label" htmlFor="type-message" aria-label="Enter a message">
                 <input
