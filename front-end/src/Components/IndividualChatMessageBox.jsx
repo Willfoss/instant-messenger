@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { UserContext } from "../Context/UserContext";
 import "./component-styling/individualChatMessageBox.css";
 import { ArrowLeft, Settings, User } from "lucide-react";
@@ -8,6 +8,10 @@ import Lottie from "lottie-react";
 import { SendHorizontal } from "lucide-react";
 import { getAllMessagesForChat, sendNewMessage } from "../api";
 import ChatMessages from "./ChatMessages";
+import io from "socket.io-client";
+
+const ENDPOINT = "http://localhost:9000";
+let socket, selectedChatCompare;
 
 export default function IndividualChatMessageBox(props) {
   const {
@@ -27,6 +31,8 @@ export default function IndividualChatMessageBox(props) {
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const { loggedInUser } = useContext(UserContext);
+  const [socketConnected, setSocketConnected] = useState(false);
+  const messagesEndRef = useRef(null);
 
   function handleBackArrowClick() {
     setSelectedChat("");
@@ -47,6 +53,29 @@ export default function IndividualChatMessageBox(props) {
   }
 
   useEffect(() => {
+    socket = io(ENDPOINT);
+    socket.emit("setup", loggedInUser);
+    socket.on("connection", () => {
+      setSocketConnected(true);
+    });
+  }, []);
+
+  useEffect(() => {
+    getMessages();
+    selectedChatCompare = selectedChat;
+  }, [selectedChat, getChatsAgain]);
+
+  useEffect(() => {
+    socket.on("message received", (newMessageReceived) => {
+      if (!selectedChatCompare || selectedChatCompare._id !== newMessageReceived.chat._id) {
+        //notification
+      } else {
+        setMessages([...messages, newMessageReceived]);
+      }
+    });
+  });
+
+  function getMessages() {
     if (!selectedChat) return;
 
     setIsLoading(true);
@@ -62,13 +91,20 @@ export default function IndividualChatMessageBox(props) {
       .then(({ messages }) => {
         setMessages(messages);
         setIsLoading(false);
+        socket.emit("join chat", selectedChat._id);
       })
       .catch((error) => {
         setIsLoading(false);
         setIsError(true);
         setErrorMessage(error.response.data.message);
       });
-  }, [selectedChat, getChatsAgain]);
+  }
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   function handleButtonSendMessage() {
     setIsMessageSending(true);
@@ -83,6 +119,7 @@ export default function IndividualChatMessageBox(props) {
     sendNewMessage(selectedChat._id, newMessage, authorisationConfig)
       .then(({ message }) => {
         setNewMessage("");
+        socket.emit("new message", message);
         setMessages([...messages, message]);
         setIsMessageSending(false);
       })
@@ -125,7 +162,7 @@ export default function IndividualChatMessageBox(props) {
             )}
           </div>
           <div className="messaging-container">
-            <div className="messages-container">
+            <div className="messages-container" ref={messagesEndRef}>
               {isLoading ? (
                 <Lottie className="load-chat-animation" animationData={buttonLoading} loop={true} />
               ) : (
@@ -138,6 +175,7 @@ export default function IndividualChatMessageBox(props) {
                   />
                 </div>
               )}
+              <div ref={messagesEndRef}></div>
             </div>
             <form id="send-message-form">
               <label className="send-message-label" htmlFor="type-message" aria-label="Enter a message">
