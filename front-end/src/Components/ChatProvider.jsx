@@ -19,6 +19,7 @@ export default function ChatProvider() {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [chattingWithUser, setChattingWithUser] = useState({});
   const [showUpdateGroupChat, setShowUpdateGroupChat] = useState(false);
+  const [notifications, setNotifications] = useState([]);
 
   const navigate = useNavigate;
 
@@ -47,6 +48,8 @@ export default function ChatProvider() {
         setChats={setChats}
         setShowProfileModal={setShowProfileModal}
         setChattingWithUser={setChattingWithUser}
+        notifications={notifications}
+        setNotifications={setNotifications}
       />
       <div className="chats-container">
         <ChatList
@@ -67,6 +70,8 @@ export default function ChatProvider() {
           setShowProfileModal={setShowProfileModal}
           setChattingWithUser={setChattingWithUser}
           setShowUpdateGroupChat={setShowUpdateGroupChat}
+          notifications={notifications}
+          setNotifications={setNotifications}
         />
       </div>
     </section>

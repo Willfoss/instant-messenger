@@ -24,6 +24,8 @@ export default function IndividualChatMessageBox(props) {
     setShowProfileModal,
     setChattingWithUser,
     setShowUpdateGroupChat,
+    notifications,
+    setNotifications,
   } = props;
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
@@ -69,7 +71,10 @@ export default function IndividualChatMessageBox(props) {
   useEffect(() => {
     socket.on("message received", (newMessageReceived) => {
       if (!selectedChatCompare || selectedChatCompare._id !== newMessageReceived.chat._id) {
-        //notification
+        if (!notifications.includes(newMessageReceived)) {
+          setNotifications([newMessageReceived, ...notifications]);
+          setGetChatsAgain(!getChatsAgain);
+        }
       } else {
         setMessages([...messages, newMessageReceived]);
       }

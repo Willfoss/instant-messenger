@@ -7,9 +7,10 @@ import { searchForUser } from "../api";
 import ErrorModal from "./ErrorModal";
 import Loading from "./Loading";
 import UserSearchList from "./UserSearchList";
+import { getSender, getTimeFromMessage, returnDate } from "../utils/chatLogic";
 
 export default function UserHeader(props) {
-  const { selectedChat, setSelectedChat, chats, setChats, setShowProfileModal, setChattingWithUser } = props;
+  const { selectedChat, setSelectedChat, chats, setChats, setShowProfileModal, setChattingWithUser, notifications, setNotifications } = props;
   const [showSearchMenu, setShowSearchMenu] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -18,6 +19,7 @@ export default function UserHeader(props) {
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showNotificationsMenu, setShowNotificationsMenu] = useState(true);
   const { loggedInUser } = useContext(UserContext);
   const searchInput = useRef(null);
   const navigate = useNavigate();
@@ -34,7 +36,17 @@ export default function UserHeader(props) {
   }
 
   function toggleUserMenu() {
+    if (showNotificationsMenu) {
+      setShowNotificationsMenu(false);
+    }
     setShowUserMenu(!showUserMenu);
+  }
+
+  function toggleNotificationsMenu() {
+    if (showUserMenu) {
+      setShowUserMenu(false);
+    }
+    setShowNotificationsMenu(!showNotificationsMenu);
   }
 
   function logoutUser() {
@@ -51,6 +63,13 @@ export default function UserHeader(props) {
   function handleSearchChange(event) {
     setSearchTerm(event.target.value);
     handleSearchRequest(event.target.value);
+  }
+
+  function handleNotificationClick(notification) {
+    console.log(notification.chat._id);
+    setSelectedChat(notification.chat);
+    setNotifications(notifications.filter((n) => n !== notification));
+    setShowNotificationsMenu(!showNotificationsMenu);
   }
 
   function handleSearchRequest(search) {
@@ -79,6 +98,8 @@ export default function UserHeader(props) {
       });
   }
 
+  console.log(notifications);
+
   return (
     <>
       <section id="user-header">
@@ -88,7 +109,36 @@ export default function UserHeader(props) {
             Search users
           </button>
           <div className="user-profile-picture-container">
-            <Bell className="bell-icon"></Bell>
+            <div className="notification-bell">
+              <Bell className="bell-icon" onClick={toggleNotificationsMenu}></Bell>
+              {notifications.length > 0 && (
+                <p className="notification-number" onClick={toggleNotificationsMenu}>
+                  {notifications.length}
+                </p>
+              )}
+            </div>
+
+            <div className={`notifications-menu-container ${showNotificationsMenu === true ? "open-notifications-menu" : ""}`}>
+              <div className="dropdown-menu-notifications">
+                <div className="notification-dropdown-content">
+                  {!notifications.length && <p className="no-messages">No New Messages</p>}
+                  {notifications.map((notification) => {
+                    return (
+                      <div className="notification" key={notification._id} onClick={() => handleNotificationClick(notification)}>
+                        {notification.chat.isGroupChat ? (
+                          <p className="notification-chat">New Message in {notification.chat.chatName}</p>
+                        ) : (
+                          <p className="notification-chat">New message from {getSender(loggedInUser, notification.chat.users)}</p>
+                        )}
+                        <p className="notification-time">
+                          {returnDate(notification.createdAt)} {getTimeFromMessage(notification.createdAt)}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
             <img className="user-profile-picture" src={loggedInUser.picture} onClick={toggleUserMenu}></img>
             <div className={`dropdown-menu-container ${showUserMenu === true ? "open-menu" : ""}`}>
               <div className="dropdown-menu">
