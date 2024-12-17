@@ -24,7 +24,7 @@ export default function UserHeader(props) {
   const searchInput = useRef(null);
   const navigate = useNavigate();
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  console.log(loggedInUser);
 
   function toggleSearchMenu() {
     setShowSearchMenu(!showSearchMenu);
@@ -66,7 +66,6 @@ export default function UserHeader(props) {
   }
 
   function handleNotificationClick(notification) {
-    console.log(notification.chat._id);
     setSelectedChat(notification.chat);
     setNotifications(notifications.filter((n) => n !== notification));
     setShowNotificationsMenu(!showNotificationsMenu);
@@ -82,7 +81,7 @@ export default function UserHeader(props) {
 
     const authorisationConfig = {
       headers: {
-        Authorization: `Bearer ${user.token}`,
+        Authorization: `Bearer ${loggedInUser.token}`,
       },
     };
 
@@ -97,8 +96,6 @@ export default function UserHeader(props) {
         setIsSearchLoading(false);
       });
   }
-
-  console.log(notifications);
 
   return (
     <>

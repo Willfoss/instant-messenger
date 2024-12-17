@@ -17,7 +17,7 @@ export default function Login() {
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-  const { setUserChanged, userChanged } = useContext(UserContext);
+  const { setUserChanged, userChanged, setLoggedInUser } = useContext(UserContext);
 
   function handleEmailChange(event) {
     setEmail(event.target.value.toLowerCase());
@@ -48,7 +48,9 @@ export default function Login() {
     logUserIn(email, password)
       .then(({ user }) => {
         setIsLoading(false);
+        setLoggedInUser(user);
         localStorage.setItem("user", JSON.stringify(user));
+
         setUserChanged(!userChanged);
         navigate("/chats");
       })
