@@ -22,9 +22,9 @@ app.use(express.json());
 //     response.sendFile(`${__dirname1}/front-end/dist/index.html`);
 //   });
 // } else {
-//   app.get("/", (request, response) => {
-//     response.send("API WORKING");
-//   });
+app.get("/", (request, response) => {
+  response.send("API WORKING");
+});
 // }
 
 app.use("/api", apiRouter);
