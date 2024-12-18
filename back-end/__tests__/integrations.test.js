@@ -792,6 +792,18 @@ describe("back end testing", () => {
             expect(body.message).toBe("More than two users are required to create a group chat");
           });
       });
+      test("POST groupchat 401: returns a not authorised message if no user loggedin", () => {
+        return request(app)
+          .post("/api/chats/groups")
+          .send({
+            group_name: "test-group",
+            users: [chatHazelUserId],
+          })
+          .expect(401)
+          .then(({ body }) => {
+            expect(body.message).toBe("User not authorised");
+          });
+      });
     });
     describe("PATCH groupname testing", () => {
       test("PATCH groupname 200: responds with the updated chat object upon successfull patch request", () => {
