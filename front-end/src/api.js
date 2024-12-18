@@ -7,7 +7,7 @@ const cloudinaryImageUploadApi = axios.create({
 console.log(process.env.VITE_API_URL);
 
 const jiffyApi = axios.create({
-  baseURL: process.env.VITE_API_URL,
+  baseURL: `${process.env.VITE_API_URL}/api`,
 });
 
 export function uploadImageToCloudinary(formData) {
