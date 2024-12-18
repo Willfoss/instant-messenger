@@ -11,7 +11,7 @@ import { getAllMessagesForChat, sendNewMessage } from "../api";
 import ChatMessages from "./ChatMessages";
 import io from "socket.io-client";
 
-const ENDPOINT = "http://localhost:9000";
+const ENDPOINT = "https://instant-messenger-i820.onrender.com";
 let socket, selectedChatCompare;
 
 export default function IndividualChatMessageBox(props) {
