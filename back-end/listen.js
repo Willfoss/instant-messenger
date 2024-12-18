@@ -9,7 +9,7 @@ const server = app.listen(PORT, () => {
 const socketIo = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "https://jiffymessenger.netlify.app",
+    origin: process.env.FRONT_END,
   },
 });
 

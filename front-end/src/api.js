@@ -4,8 +4,10 @@ const cloudinaryImageUploadApi = axios.create({
   baseURL: "https://api.cloudinary.com/v1_1/dubtm2mub/image",
 });
 
+console.log(process.env.VITE_API_URL);
+
 const jiffyApi = axios.create({
-  baseURL: "https://instant-messenger-i820.onrender.com/api",
+  baseURL: process.env.VITE_API_URL,
 });
 
 export function uploadImageToCloudinary(formData) {
