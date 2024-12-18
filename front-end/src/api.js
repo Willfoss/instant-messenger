@@ -5,7 +5,7 @@ const cloudinaryImageUploadApi = axios.create({
 });
 
 const jiffyApi = axios.create({
-  baseURL: "http://localhost:9000/api",
+  baseURL: "https://instant-messenger-i820.onrender.com/api",
 });
 
 export function uploadImageToCloudinary(formData) {
