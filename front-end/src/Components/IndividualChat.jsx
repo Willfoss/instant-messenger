@@ -14,6 +14,8 @@ export default function IndividualChat(props) {
     setChattingWithUser,
     notifications,
     setNotifications,
+    setIsChatError,
+    setChatErrorMessage,
   } = props;
   const { loggedInUser } = useContext(UserContext);
   const [windowPixels, setWindowPixels] = useState({
@@ -45,6 +47,8 @@ export default function IndividualChat(props) {
         setShowUpdateGroupChat={setShowUpdateGroupChat}
         notifications={notifications}
         setNotifications={setNotifications}
+        setIsChatError={setIsChatError}
+        setChatErrorMessage={setChatErrorMessage}
       />
     </div>
   );

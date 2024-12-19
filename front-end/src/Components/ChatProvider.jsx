@@ -23,6 +23,8 @@ export default function ChatProvider() {
   const [notifications, setNotifications] = useState([]);
   const [showConfirmMemberRemoval, setConfirmMemberRemoval] = useState(false);
   const [memberRemovalMessage, setMemberRemovalMessage] = useState("");
+  const [isChatError, setIsChatError] = useState(false);
+  const [chatErrorMessage, setChatErrorMessage] = useState("");
 
   const navigate = useNavigate;
 
@@ -49,6 +51,7 @@ export default function ChatProvider() {
       {showConfirmMemberRemoval && (
         <Toast success="yes" setShowToast={setConfirmMemberRemoval} showToast={showConfirmMemberRemoval} successMessage={memberRemovalMessage} />
       )}
+      {isChatError && <Toast error="yes" errorMessage={chatErrorMessage} showToast={isChatError} setShowToast={setIsChatError} />}
       <UserHeader
         selectedChat={selectedChat}
         setSelectedChat={setSelectedChat}
@@ -80,6 +83,8 @@ export default function ChatProvider() {
           setShowUpdateGroupChat={setShowUpdateGroupChat}
           notifications={notifications}
           setNotifications={setNotifications}
+          setIsChatError={setIsChatError}
+          setChatErrorMessage={setChatErrorMessage}
         />
       </div>
     </section>

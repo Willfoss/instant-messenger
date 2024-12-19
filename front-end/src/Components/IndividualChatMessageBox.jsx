@@ -26,13 +26,13 @@ export default function IndividualChatMessageBox(props) {
     setShowUpdateGroupChat,
     notifications,
     setNotifications,
+    setIsChatError,
+    setChatErrorMessage,
   } = props;
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isMessageSending, setIsMessageSending] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
   const { loggedInUser } = useContext(UserContext);
   const [socketConnected, setSocketConnected] = useState(false);
   const [isUserTyping, setIsUserTyping] = useState(false);
@@ -92,7 +92,7 @@ export default function IndividualChatMessageBox(props) {
     if (!selectedChat) return;
 
     setIsLoading(true);
-    setIsError(false);
+    setIsChatError(false);
 
     const authorisationConfig = {
       headers: {
@@ -108,8 +108,8 @@ export default function IndividualChatMessageBox(props) {
       })
       .catch((error) => {
         setIsLoading(false);
-        setIsError(true);
-        setErrorMessage(error.response.data.message);
+        setIsChatError(true);
+        setChatErrorMessage(error.response.data.message);
       });
   }
 
@@ -121,7 +121,7 @@ export default function IndividualChatMessageBox(props) {
 
   function handleButtonSendMessage() {
     setIsMessageSending(true);
-    setIsError(false);
+    setIsChatError(false);
     socket.emit("stop typing", selectedChat._id);
 
     const authorisationConfig = {
@@ -139,8 +139,8 @@ export default function IndividualChatMessageBox(props) {
       })
       .catch((error) => {
         setIsMessageSending(false);
-        setIsError(true);
-        setErrorMessage(error.response.data.message);
+        setIsChatError(true);
+        setChatErrorMessage(error.response.data.message);
       });
   }
 
