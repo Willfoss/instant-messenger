@@ -101,7 +101,6 @@ export default function CreateGroup(props) {
         setShowCreateGroup(false);
       })
       .catch((error) => {
-        console.log(error);
         setIsError(true);
         setIsFormSubmitting(false);
         setErrorMessage(error.response.data.message);
