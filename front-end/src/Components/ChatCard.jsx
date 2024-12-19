@@ -9,8 +9,6 @@ export default function ChatCard(props) {
     setSelectedChat(chat);
   }
 
-  console.log(chat, selectedChat);
-
   return (
     <div className={`chat-card ${selectedChat === chat && "selected-chat"}`} onClick={selectChat}>
       <p>{!chat.isGroupChat ? getSender(user, chat.users) : chat.chatName}</p>

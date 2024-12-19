@@ -125,8 +125,6 @@ export default function UpdateGroupChatModal(props) {
       },
     };
 
-    console.log(groupMember);
-
     removeUserFromExistingGroupChat(selectedChat._id, groupMember._id, authorisationConfig)
       .then(({ groupChat }) => {
         groupMember._id === user._id ? setSelectedChat() : setSelectedChat(groupChat);
@@ -140,7 +138,6 @@ export default function UpdateGroupChatModal(props) {
       .catch((error) => {
         setIsUserBeingAltered(false);
         setIsError(true);
-        console.log(error);
         setErrorMessage(error.response.data.message);
       });
   }
