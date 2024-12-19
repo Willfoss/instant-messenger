@@ -9,6 +9,7 @@ import { removeUserFromExistingGroupChat, searchForUser, updateGroupChatName } f
 import Lottie from "lottie-react";
 import buttonLoading from "../assets/loading-on-button.json";
 import ErrorModal from "./ErrorModal";
+import ConfirmAction from "./ConfirmAction";
 
 export default function UpdateGroupChatModal(props) {
   const { user, setSelectedChat, selectedChat, getChatsAgain, setGetChatsAgain, setShowUpdateGroupChat } = props;
@@ -24,6 +25,7 @@ export default function UpdateGroupChatModal(props) {
   const [isGroupNameError, setIsGroupNameError] = useState(false);
   const [isGroupMemberError, setIsGroupMemberError] = useState(false);
   const [isNotFoundError, setIsNotFoundError] = useState(false);
+  const [toggleShowConfirmDelete, setToggleShowConfirmDelete] = useState(false);
 
   function handleGroupNameChange(event) {
     setGroupChatName(event.target.value);
@@ -127,8 +129,22 @@ export default function UpdateGroupChatModal(props) {
       });
   }
 
+  function handleLeaveGroupClick(event) {
+    event.preventDefault();
+    setToggleShowConfirmDelete(true);
+  }
+
   return (
     <section id="create-group">
+      {toggleShowConfirmDelete && (
+        <ConfirmAction
+          toggleShowConfirmDelete={toggleShowConfirmDelete}
+          setToggleShowConfirmDelete={setToggleShowConfirmDelete}
+          user={user}
+          handleUpdateRemoveUser={handleUpdateRemoveUser}
+          setShowUpdateGroupChat={setShowUpdateGroupChat}
+        />
+      )}
       <div className="update-group-modal-container">
         <div className="update-group-modal-header-container">
           <h2 className="update-group-modal-header">{selectedChat.chatName} Settings</h2>
@@ -207,7 +223,7 @@ export default function UpdateGroupChatModal(props) {
               })
             )}
           </section>
-          <button className="leave-group-button" onClick={() => handleUpdateRemoveUser(user._id)}>
+          <button className="leave-group-button" onClick={handleLeaveGroupClick}>
             Leave Group
           </button>
         </form>
