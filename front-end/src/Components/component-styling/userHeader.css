@@ -195,7 +195,8 @@
 
 .dropdown-menu-notifications {
   padding: 0.2em;
-  background-color: var(--secondary-background-colour);
+  background-color: var(--primary-background-colour);
+  border: 2px solid var(--secondary-background-colour);
 }
 
 .notification-time {
@@ -214,9 +215,9 @@
   width: 1.3em;
   height: 1.3em;
   z-index: 20;
-  left: -1em;
-  top: -1em;
-  position: relative;
+  top: 1em;
+  right: 5.5em;
+  position: fixed;
   border-radius: 50%;
   background-color: var(--brand-colour);
 }
@@ -267,9 +268,10 @@
 }
 
 .dropdown-menu {
-  background-color: var(--secondary-background-colour);
+  background-color: var(--primary-background-colour);
   padding: 20px;
   margin: 10px;
+  border: 2px solid var(--secondary-background-colour);
 }
 
 .dropdown-menu hr {

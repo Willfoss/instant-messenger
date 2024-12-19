@@ -12,8 +12,6 @@ export default function IndividualChat(props) {
     setShowUpdateGroupChat,
     setShowProfileModal,
     setChattingWithUser,
-    notifications,
-    setNotifications,
     setIsChatError,
     setChatErrorMessage,
   } = props;
@@ -45,8 +43,6 @@ export default function IndividualChat(props) {
         setShowProfileModal={setShowProfileModal}
         setChattingWithUser={setChattingWithUser}
         setShowUpdateGroupChat={setShowUpdateGroupChat}
-        notifications={notifications}
-        setNotifications={setNotifications}
         setIsChatError={setIsChatError}
         setChatErrorMessage={setChatErrorMessage}
       />

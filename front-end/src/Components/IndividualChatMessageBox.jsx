@@ -10,6 +10,7 @@ import { SendHorizontal } from "lucide-react";
 import { getAllMessagesForChat, sendNewMessage } from "../api";
 import ChatMessages from "./ChatMessages";
 import io from "socket.io-client";
+import { NotificationsContext } from "../Context/NotificationsContext";
 
 const ENDPOINT = process.env.VITE_API_URL;
 let socket, selectedChatCompare;
@@ -24,11 +25,10 @@ export default function IndividualChatMessageBox(props) {
     setShowProfileModal,
     setChattingWithUser,
     setShowUpdateGroupChat,
-    notifications,
-    setNotifications,
     setIsChatError,
     setChatErrorMessage,
   } = props;
+  const { notifications, setNotifications } = useContext(NotificationsContext);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -73,7 +73,6 @@ export default function IndividualChatMessageBox(props) {
       if (!selectedChatCompare || selectedChatCompare._id !== newMessageReceived.chat._id) {
         if (!notifications.includes(newMessageReceived)) {
           setNotifications([newMessageReceived, ...notifications]);
-          setGetChatsAgain(!getChatsAgain);
         }
       } else {
         setMessages([...messages, newMessageReceived]);
