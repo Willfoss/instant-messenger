@@ -70,7 +70,7 @@ export default function Login(props) {
         <div className="login-container">
           <form onSubmit={handleLoginFormSubmit} className="login-form">
             <h2 className="login-header">Log in</h2>
-            {showToast && <Toast setShowToast={setShowToast} success="yes" successMessage="You Successfully signed up!" />}
+            {showToast && <Toast setShowToast={setShowToast} successStatic="yes" successMessage="You Successfully signed up!" />}
             {isError && <ErrorModal setIsError={setIsError} errorMessage={errorMessage} />}
             <label htmlFor="email">
               <input

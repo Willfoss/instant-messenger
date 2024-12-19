@@ -9,7 +9,7 @@ export default function ConfirmAction(props) {
   }
 
   function handleLeaveGroupClick() {
-    handleUpdateRemoveUser(user._id);
+    handleUpdateRemoveUser(user);
     setToggleShowConfirmDelete(false);
     setShowUpdateGroupChat(false);
   }

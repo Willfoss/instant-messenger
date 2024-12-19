@@ -9,15 +9,16 @@ export default function GroupUserList(props) {
   const { loggedInUser } = useContext(UserContext);
 
   function handleRemoveUser() {
-    areUpdatingChatUser ? handleUpdateRemoveUser(groupMember._id) : removeUser(groupMember._id);
+    areUpdatingChatUser ? handleUpdateRemoveUser(groupMember) : removeUser(groupMember._id);
   }
 
   return (
     <div className="user-list-container">
       <p>{groupMember.name}</p>
-      {selectedChat.groupAdmin._id === loggedInUser._id && groupMember._id !== loggedInUser._id && (
+      {areUpdatingChatUser && selectedChat.groupAdmin._id === loggedInUser._id && groupMember._id !== loggedInUser._id && (
         <X className="remove-user" onClick={handleRemoveUser}></X>
       )}
+      {!areUpdatingChatUser && <X className="remove-user" onClick={handleRemoveUser}></X>}
     </div>
   );
 }

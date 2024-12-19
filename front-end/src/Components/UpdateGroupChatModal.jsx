@@ -12,7 +12,16 @@ import ErrorModal from "./ErrorModal";
 import ConfirmAction from "./ConfirmAction";
 
 export default function UpdateGroupChatModal(props) {
-  const { user, setSelectedChat, selectedChat, getChatsAgain, setGetChatsAgain, setShowUpdateGroupChat } = props;
+  const {
+    user,
+    setSelectedChat,
+    selectedChat,
+    getChatsAgain,
+    setGetChatsAgain,
+    setShowUpdateGroupChat,
+    setConfirmMemberRemoval,
+    setMemberRemovalMessage,
+  } = props;
   const [groupChatName, setGroupChatName] = useState(selectedChat.chatName);
   const [groupChatMembers, setGroupChatMembers] = useState(selectedChat.users);
   const [userSearch, setUserSearch] = useState("");
@@ -106,7 +115,7 @@ export default function UpdateGroupChatModal(props) {
       });
   }
 
-  function handleUpdateRemoveUser(groupMember_id) {
+  function handleUpdateRemoveUser(groupMember) {
     setIsUserBeingAltered(true);
     setIsError(false);
 
@@ -116,15 +125,22 @@ export default function UpdateGroupChatModal(props) {
       },
     };
 
-    removeUserFromExistingGroupChat(selectedChat._id, groupMember_id, authorisationConfig)
+    console.log(groupMember);
+
+    removeUserFromExistingGroupChat(selectedChat._id, groupMember._id, authorisationConfig)
       .then(({ groupChat }) => {
-        groupMember_id === user._id ? setSelectedChat() : setSelectedChat(groupChat);
+        groupMember._id === user._id ? setSelectedChat() : setSelectedChat(groupChat);
         setGetChatsAgain(!getChatsAgain);
         setIsUserBeingAltered(false);
+        setConfirmMemberRemoval(true);
+        setMemberRemovalMessage(
+          groupMember._id === user._id ? `You have left the ${groupChat.chatName}` : `${groupMember.name} has been removed from the group`
+        );
       })
       .catch((error) => {
         setIsUserBeingAltered(false);
         setIsError(true);
+        console.log(error);
         setErrorMessage(error.response.data.message);
       });
   }

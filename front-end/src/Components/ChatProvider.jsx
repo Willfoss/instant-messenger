@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import CreateGroup from "./CreateGroup";
 import ProfileModal from "./ProfileModal";
 import UpdateGroupChatModal from "./UpdateGroupChatModal";
+import Toast from "./Toast";
 
 export default function ChatProvider() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -20,6 +21,8 @@ export default function ChatProvider() {
   const [chattingWithUser, setChattingWithUser] = useState({});
   const [showUpdateGroupChat, setShowUpdateGroupChat] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  const [showConfirmMemberRemoval, setConfirmMemberRemoval] = useState(false);
+  const [memberRemovalMessage, setMemberRemovalMessage] = useState("");
 
   const navigate = useNavigate;
 
@@ -39,7 +42,12 @@ export default function ChatProvider() {
           getChatsAgain={getChatsAgain}
           setGetChatsAgain={setGetChatsAgain}
           setShowUpdateGroupChat={setShowUpdateGroupChat}
+          setConfirmMemberRemoval={setConfirmMemberRemoval}
+          setMemberRemovalMessage={setMemberRemovalMessage}
         />
+      )}
+      {showConfirmMemberRemoval && (
+        <Toast success="yes" setShowToast={setConfirmMemberRemoval} showToast={showConfirmMemberRemoval} successMessage={memberRemovalMessage} />
       )}
       <UserHeader
         selectedChat={selectedChat}
