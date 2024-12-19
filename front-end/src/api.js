@@ -4,8 +4,6 @@ const cloudinaryImageUploadApi = axios.create({
   baseURL: "https://api.cloudinary.com/v1_1/dubtm2mub/image",
 });
 
-console.log(process.env.VITE_API_URL);
-
 const jiffyApi = axios.create({
   baseURL: `${process.env.VITE_API_URL}/api`,
 });
