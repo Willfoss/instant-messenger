@@ -7,8 +7,10 @@ import buttonLoading from "../assets/loading-on-button.json";
 import Lottie from "lottie-react";
 import Header from "./Header";
 import { UserContext } from "../Context/UserContext";
+import Toast from "./Toast";
 
-export default function Login() {
+export default function Login(props) {
+  const { showToast, setShowToast } = props;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isEmailError, setIsEmailError] = useState(false);
@@ -68,6 +70,7 @@ export default function Login() {
         <div className="login-container">
           <form onSubmit={handleLoginFormSubmit} className="login-form">
             <h2 className="login-header">Log in</h2>
+            {showToast && <Toast setShowToast={setShowToast} success="yes" successMessage="You Successfully signed up!" />}
             {isError && <ErrorModal setIsError={setIsError} errorMessage={errorMessage} />}
             <label htmlFor="email">
               <input

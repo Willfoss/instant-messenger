@@ -8,7 +8,8 @@ import ErrorModal from "./ErrorModal";
 import { signUpUser } from "../api";
 import Header from "./Header";
 
-export default function Signup() {
+export default function Signup(props) {
+  const { setShowToast } = props;
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -89,6 +90,7 @@ export default function Signup() {
         setIsError(false);
         setIsLoading(false);
         navigate("/");
+        setShowToast(true);
       })
       .catch((error) => {
         setErrorMessage(error.response.data.message);

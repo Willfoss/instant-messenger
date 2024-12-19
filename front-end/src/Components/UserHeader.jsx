@@ -24,8 +24,6 @@ export default function UserHeader(props) {
   const searchInput = useRef(null);
   const navigate = useNavigate();
 
-  console.log(loggedInUser);
-
   function toggleSearchMenu() {
     setShowSearchMenu(!showSearchMenu);
     if (showSearchMenu === false) {
