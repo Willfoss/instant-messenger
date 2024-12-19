@@ -3,10 +3,12 @@ import { getAllChatsForLoggedInUser } from "../api";
 import "./component-styling/chatList.css";
 import { Plus } from "lucide-react";
 import ChatCard from "./ChatCard";
+import ErrorModal from "./ErrorModal";
+import Loading from "./Loading";
 
 export default function ChatList(props) {
   const { selectedChat, setSelectedChat, user, chats, setChats, showCreateGroup, setShowCreateGroup, getChatsAgain } = props;
-  const [isError, setIsError] = useState(false);
+  const [isError, setIsError] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -59,9 +61,15 @@ export default function ChatList(props) {
         </div>
       </div>
       <div className="chat-list-container">
-        {chats.map((chat) => {
-          return <ChatCard key={chat._id} chat={chat} selectedChat={selectedChat} setSelectedChat={setSelectedChat} user={user}></ChatCard>;
-        })}
+        {isLoading ? (
+          <Loading skeletons={9} />
+        ) : isError ? (
+          <ErrorModal errorMessage={errorMessage} />
+        ) : (
+          chats.map((chat) => {
+            return <ChatCard key={chat._id} chat={chat} selectedChat={selectedChat} setSelectedChat={setSelectedChat} user={user}></ChatCard>;
+          })
+        )}
       </div>
     </section>
   );
