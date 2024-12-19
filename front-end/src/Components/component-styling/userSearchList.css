@@ -13,6 +13,25 @@
   }
 }
 
+.center-loading {
+  background-color: var(--brand-colour-loading);
+  opacity: 0.6;
+}
+
+.add-user-loading {
+  z-index: 5;
+  position: fixed;
+  width: calc(100% - 64px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chat-loading {
+  width: 4em;
+  height: 4em;
+}
+
 .user-profile-image {
   width: 3em;
   height: 3em;

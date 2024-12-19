@@ -10,7 +10,7 @@ export default function Toast(props) {
 
   setTimeout(() => {
     setShowToast(false);
-  }, 7000);
+  }, 10000);
 
   return (
     <section id="toast" className={error && "toast"}>

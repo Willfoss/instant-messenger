@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import "./component-styling/userSearchList.css";
 import { accessChat } from "../api";
 import ErrorModal from "./ErrorModal";
+import Lottie from "lottie-react";
+import buttonLoading from "../assets/loading-on-button.json";
 
 export default function UserSearchList(props) {
-  const { searchedUser, user, setIsChatLoading, setSelectedChat, toggleSearchMenu, chats, setChats } = props;
+  const { searchedUser, user, setSelectedChat, toggleSearchMenu, chats, setChats } = props;
   const [isError, setIsError] = useState(false);
+  const [isChatLoading, setIsChatLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState();
 
   function getAccessToChat() {
@@ -38,7 +41,12 @@ export default function UserSearchList(props) {
   }
 
   return (
-    <div className="user-card" onClick={getAccessToChat}>
+    <div className={`user-card ${isChatLoading && "center-loading"}`} onClick={getAccessToChat}>
+      {isChatLoading && (
+        <div className="add-user-loading">
+          <Lottie className="chat-loading" animationData={buttonLoading} loop={true} />
+        </div>
+      )}
       <img className="user-profile-image" src={searchedUser.picture}></img>
       <div className="user-info-container">
         <p className="user-card-text bold username">{searchedUser.name}</p>

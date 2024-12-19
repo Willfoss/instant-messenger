@@ -8,6 +8,7 @@ import ErrorModal from "./ErrorModal";
 import Loading from "./Loading";
 import UserSearchList from "./UserSearchList";
 import { getSender, getTimeFromMessage, returnDate } from "../utils/chatLogic";
+import NotFoundError from "./NotFoundError";
 
 export default function UserHeader(props) {
   const { selectedChat, setSelectedChat, chats, setChats, setShowProfileModal, setChattingWithUser, notifications, setNotifications } = props;
@@ -15,11 +16,11 @@ export default function UserHeader(props) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
-  const [isChatLoading, setIsChatLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showNotificationsMenu, setShowNotificationsMenu] = useState(true);
+  const [isNotFoundError, setIsNotFoundError] = useState(false);
   const { loggedInUser } = useContext(UserContext);
   const searchInput = useRef(null);
   const navigate = useNavigate();
@@ -75,6 +76,7 @@ export default function UserHeader(props) {
     }
 
     setIsSearchLoading(true);
+    setIsNotFoundError(false);
     setIsError(false);
 
     const authorisationConfig = {
@@ -89,7 +91,12 @@ export default function UserHeader(props) {
         setIsSearchLoading(false);
       })
       .catch((error) => {
-        setIsError(true);
+        if (error.response.status === 404) {
+          setSearchResults([]);
+          setIsNotFoundError(true);
+        } else {
+          setIsError(true);
+        }
         setErrorMessage(error.response.data.message);
         setIsSearchLoading(false);
       });
@@ -171,15 +178,14 @@ export default function UserHeader(props) {
         </div>
         <section id="search-results-container">
           {isError && <ErrorModal errorMessage={errorMessage} setIsError={setIsError} />}
-          {isSearchLoading && <Loading skeletons={8} />}
+          {isSearchLoading ? <Loading skeletons={8} /> : isNotFoundError && <NotFoundError errorMessage={errorMessage} />}
           {!isError && !isSearchLoading && (
             <section id="user-search-list">
               {searchResults.map((userResult) => (
                 <UserSearchList
                   key={userResult._id}
                   searchedUser={userResult}
-                  user={user}
-                  setIsChatLoading={setIsChatLoading}
+                  user={loggedInUser}
                   setSelectedChat={setSelectedChat}
                   selectedChat={selectedChat}
                   toggleSearchMenu={toggleSearchMenu}

@@ -5,7 +5,7 @@ import ChatProvider from "./Components/ChatProvider";
 import { useState } from "react";
 
 function App() {
-  const [showToast, setShowToast] = useState(true);
+  const [showToast, setShowToast] = useState(false);
 
   return (
     <main>

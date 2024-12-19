@@ -67,6 +67,7 @@ export default function UpdateGroupChatModal(props) {
       })
       .catch((error) => {
         if (error.response.status === 404) {
+          setSearchedUsersResults([]);
           setIsNotFoundError(true);
         } else {
           setIsError(true);
