@@ -31,7 +31,6 @@ export default function UserSearchList(props) {
       .catch((error) => {
         setIsChatLoading(false);
         setIsError(true);
-        console.log(error);
         setErrorMessage(error.response);
       });
   }
