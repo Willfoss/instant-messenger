@@ -23,7 +23,7 @@ export default function UserHeader(props) {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showNotificationsMenu, setShowNotificationsMenu] = useState(false);
   const [isNotFoundError, setIsNotFoundError] = useState(false);
-  const { loggedInUser } = useContext(UserContext);
+  const { loggedInUser, setLoggedInUser } = useContext(UserContext);
   const searchInput = useRef(null);
   const navigate = useNavigate();
 
@@ -52,6 +52,7 @@ export default function UserHeader(props) {
 
   function logoutUser() {
     localStorage.removeItem("user");
+    setLoggedInUser("");
     navigate("/");
   }
 

@@ -248,7 +248,7 @@ export default function IndividualChatMessageBox(props) {
         </div>
       ) : (
         <div className="no-chat-selected-box">
-          <p className="no-chat-selected-text">Select a user to start chatting</p>
+          <p className="no-chat-selected-text">Select or search for a user to start chatting</p>
         </div>
       )}
     </section>
