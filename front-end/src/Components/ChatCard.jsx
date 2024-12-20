@@ -2,14 +2,15 @@ import React, { useContext, useEffect, useState } from "react";
 import { getSender, returnDate } from "../utils/chatLogic";
 import "./component-styling/chatCard.css";
 import { NotificationsContext } from "../Context/NotificationsContext";
+import { UserContext } from "../Context/UserContext";
 
 export default function ChatCard(props) {
   const { chat, selectedChat, setSelectedChat, user } = props;
   const [notificationsForChat, setNotificationsForChat] = useState();
+  const { loggedInUser } = useContext(UserContext);
 
   const { notifications, setNotifications } = useContext(NotificationsContext);
 
-  console.log(notifications);
   function selectChat() {
     setSelectedChat(chat);
     setNotifications(
