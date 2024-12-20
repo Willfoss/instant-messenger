@@ -10,7 +10,7 @@ export default function ChatCard(props) {
   }
 
   return (
-    <div className={`chat-card ${selectedChat._id === chat._id && "selected-chat"}`} onClick={selectChat}>
+    <div className={`chat-card ${selectedChat && selectedChat._id === chat._id && "selected-chat"}`} onClick={selectChat}>
       <p>{!chat.isGroupChat ? getSender(user, chat.users) : chat.chatName}</p>
     </div>
   );
