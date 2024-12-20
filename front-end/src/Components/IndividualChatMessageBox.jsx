@@ -73,6 +73,7 @@ export default function IndividualChatMessageBox(props) {
       if (!selectedChatCompare || selectedChatCompare._id !== newMessageReceived.chat._id) {
         if (!notifications.includes(newMessageReceived)) {
           setNotifications([newMessageReceived, ...notifications]);
+          setGetChatsAgain(!getChatsAgain);
         }
       } else {
         setMessages([...messages, newMessageReceived]);

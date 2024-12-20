@@ -1,17 +1,19 @@
 .chat-card {
   display: flex;
+  flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   background-color: var(--primary-background-colour);
   width: 100%;
-  min-height: 75px;
+  min-height: 85px;
   gap: 1em;
-  padding: 0em 1em;
+  padding: 1em;
   border-radius: 1em;
   color: var(--primary-text-colour);
   &:hover {
     cursor: pointer;
     background-color: var(--brand-colour);
+    color: black;
   }
 }
 
@@ -45,4 +47,43 @@
 .selected-chat {
   background-color: var(--brand-colour);
   color: black;
+}
+
+.class-list-name {
+  font-weight: bold;
+}
+
+.chat-card-heading {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.chat-card-content {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.latest-message {
+  display: block;
+  white-space: nowrap;
+  max-height: 1.2em;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 90%;
+}
+
+.notifications {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--brand-colour);
+  border-radius: 50%;
+  font-size: 0.8em;
+  width: 1.3em;
+  height: 1.3em;
+  color: black;
+  padding: 0.3em;
+  font-weight: bold;
 }

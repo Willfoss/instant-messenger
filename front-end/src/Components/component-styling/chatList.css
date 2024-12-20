@@ -67,7 +67,8 @@
 
 @media screen and (min-width: 769px) {
   .show-chat-list {
-    width: 55%;
+    width: 42%;
+    max-width: 42%;
   }
   .group-chat {
     font-size: 0.8em;
@@ -85,6 +86,7 @@
 @media screen and (min-width: 1050px) {
   .show-chat-list {
     width: 47%;
+    max-width: 35%;
   }
   .group-chat {
     font-size: 0.9em;
@@ -100,6 +102,7 @@
 @media screen and (min-width: 1300px) {
   .show-chat-list {
     width: 38%;
+    max-width: 38%;
   }
   .group-chat {
     font-size: 1em;
