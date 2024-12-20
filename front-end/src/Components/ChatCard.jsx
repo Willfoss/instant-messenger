@@ -8,6 +8,7 @@ export default function ChatCard(props) {
   const { chat, selectedChat, setSelectedChat, user } = props;
   const [notificationsForChat, setNotificationsForChat] = useState();
   const { loggedInUser } = useContext(UserContext);
+  const [latestMessageSender, setLatestMessageSender] = useState();
 
   const { notifications, setNotifications } = useContext(NotificationsContext);
 

@@ -37,8 +37,8 @@ export default function Login(props) {
   }
 
   function handleGuest2Login() {
-    setEmail("guestuser2@guest.com");
-    setPassword("guestuse2r");
+    setEmail("guestuser2@email.com");
+    setPassword("guestuser2");
   }
 
   function handleLoginFormSubmit(event) {
