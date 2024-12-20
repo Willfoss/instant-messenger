@@ -32,8 +32,13 @@ export default function Login(props) {
   }
 
   function handleGuestLogin() {
-    setEmail("guest@guestemail.com");
-    setPassword("guest");
+    setEmail("guestuser@email.com");
+    setPassword("guestuser");
+  }
+
+  function handleGuest2Login() {
+    setEmail("guestuser2@guest.com");
+    setPassword("guestuse2r");
   }
 
   function handleLoginFormSubmit(event) {
@@ -107,6 +112,9 @@ export default function Login(props) {
           </form>
           <button className="guest-button" onClick={handleGuestLogin}>
             Set Guest Account Credentials
+          </button>
+          <button className="guest-button" onClick={handleGuest2Login}>
+            Set 2nd Guest Account Credentials
           </button>
         </div>
       </div>
