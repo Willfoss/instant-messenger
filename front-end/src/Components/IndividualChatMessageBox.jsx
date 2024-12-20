@@ -87,6 +87,8 @@ export default function IndividualChatMessageBox(props) {
       setIsUserTyping(false);
     });
   });
+  console.log(messages);
+  console.log(selectedChat);
 
   function getMessages() {
     if (!selectedChat) return;
@@ -136,7 +138,6 @@ export default function IndividualChatMessageBox(props) {
         socket.emit("new message", message);
         setMessages([...messages, message]);
         setIsMessageSending(false);
-        setGetChatsAgain(!getChatsAgain);
       })
       .catch((error) => {
         setIsMessageSending(false);
