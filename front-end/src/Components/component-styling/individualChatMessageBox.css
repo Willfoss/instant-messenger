@@ -28,6 +28,7 @@
 .back-to-chat-list-button,
 .settings-button,
 .users-button {
+  color: black;
   width: 2em;
   height: 2em;
 }

@@ -15,7 +15,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 50%;
   width: 90%;
   background-color: var(--primary-background-colour);
   border-radius: 0.5em;
@@ -25,7 +24,7 @@
 
 .close-profile-modal {
   position: relative;
-  top: -41px;
+  top: -20%;
   align-self: flex-end;
   width: 2em;
   height: 2em;
