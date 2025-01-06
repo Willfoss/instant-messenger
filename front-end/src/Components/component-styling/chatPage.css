@@ -8,7 +8,13 @@
 .chats-container {
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
-  padding: 0rem 1rem;
+  gap: 1em;
+  padding: 0em 0.5em;
   height: calc(100dvh - var(--header-height));
+}
+
+@media screen and (min-width: 769px) {
+  .chats-container {
+    padding: 0em 1em;
+  }
 }

@@ -81,6 +81,9 @@
     width: 1em;
     height: 1em;
   }
+  .chat-list-container {
+    padding: 0em 1em;
+  }
 }
 
 @media screen and (min-width: 1050px) {
