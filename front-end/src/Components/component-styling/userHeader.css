@@ -173,8 +173,8 @@
 .dropdown-menu-container {
   position: absolute;
   width: 300px;
-  right: 3%;
-  top: 6%;
+  right: 1em;
+  top: 3.5em;
   max-height: 0px;
   overflow: hidden;
   transition: max-height 0.5s;
@@ -183,8 +183,8 @@
 .notifications-menu-container {
   position: absolute;
   width: 300px;
-  right: 6%;
-  top: 6%;
+  right: 3em;
+  top: 4em;
   max-height: 0px;
   overflow: hidden;
   transition: max-height 0.5s;
@@ -218,7 +218,7 @@
   height: 1.3em;
   z-index: 11;
   top: 1em;
-  right: 5.5em;
+  right: 5em;
   position: fixed;
   border-radius: 50%;
   background-color: var(--brand-colour);
@@ -271,7 +271,7 @@
 
 .dropdown-menu {
   background-color: var(--primary-background-colour);
-  padding: 20px;
+  padding: 0.5em;
   margin: 10px;
   border: 2px solid var(--secondary-background-colour);
 }
@@ -296,10 +296,11 @@
   display: flex;
   align-items: center;
   text-decoration: none;
-  margin: 1em 0em;
+  height: 2em;
   color: var(--primary-text-colour);
   &:hover {
     color: lightgray;
+    background-color: var(--tertiary-background-colour);
     font-weight: bold;
     cursor: pointer;
   }
@@ -326,6 +327,10 @@
   }
   .user-header-container {
     padding: 0em 1em;
+  }
+  .notification-number {
+    top: 1em;
+    right: 5.5em;
   }
 }
 

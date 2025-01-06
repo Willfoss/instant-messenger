@@ -12,7 +12,18 @@ import NotFoundError from "./NotFoundError";
 import { NotificationsContext } from "../Context/NotificationsContext";
 
 export default function UserHeader(props) {
-  const { selectedChat, setSelectedChat, chats, setChats, setShowProfileModal, setChattingWithUser } = props;
+  const {
+    selectedChat,
+    setSelectedChat,
+    chats,
+    setChats,
+    setShowProfileModal,
+    setChattingWithUser,
+    showNotificationsMenu,
+    setShowNotificationsMenu,
+    showUserMenu,
+    setShowUserMenu,
+  } = props;
   const { notifications, setNotifications } = useContext(NotificationsContext);
   const [showSearchMenu, setShowSearchMenu] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -20,8 +31,6 @@ export default function UserHeader(props) {
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [showUserMenu, setShowUserMenu] = useState(false);
-  const [showNotificationsMenu, setShowNotificationsMenu] = useState(false);
   const [isNotFoundError, setIsNotFoundError] = useState(false);
   const { loggedInUser, setLoggedInUser } = useContext(UserContext);
   const searchInput = useRef(null);

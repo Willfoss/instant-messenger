@@ -24,10 +24,17 @@ export default function ChatProvider() {
   const [memberRemovalMessage, setMemberRemovalMessage] = useState("");
   const [isChatError, setIsChatError] = useState(false);
   const [chatErrorMessage, setChatErrorMessage] = useState("");
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showNotificationsMenu, setShowNotificationsMenu] = useState(false);
 
   const navigate = useNavigate();
 
   if (!user) navigate("/");
+
+  function closeOpenMenus() {
+    setShowNotificationsMenu(false);
+    setShowUserMenu(false);
+  }
 
   return (
     <section className="chat-page">
@@ -58,8 +65,12 @@ export default function ChatProvider() {
         setChats={setChats}
         setShowProfileModal={setShowProfileModal}
         setChattingWithUser={setChattingWithUser}
+        showUserMenu={showUserMenu}
+        setShowUserMenu={setShowUserMenu}
+        showNotificationsMenu={showNotificationsMenu}
+        setShowNotificationsMenu={setShowNotificationsMenu}
       />
-      <div className="chats-container">
+      <div className="chats-container" onClick={closeOpenMenus}>
         <ChatList
           selectedChat={selectedChat}
           setSelectedChat={setSelectedChat}
