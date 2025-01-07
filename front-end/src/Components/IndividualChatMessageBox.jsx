@@ -87,8 +87,6 @@ export default function IndividualChatMessageBox(props) {
       setIsUserTyping(false);
     });
   });
-  console.log(messages);
-  console.log(selectedChat);
 
   function getMessages() {
     if (!selectedChat) return;
