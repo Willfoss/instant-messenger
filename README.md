@@ -4,6 +4,10 @@ An instant messenger application built using React, Node, Express, MongoDb and S
 
 The stand out features of the application are user authentication, made using JSON web tokens (JWT), and the real time instant messenging made possible using socketIo.
 
+[Deployed version here!](https://jiffymessenger.netlify.app/)
+
+---
+
 ## Installation
 
 clone the project
@@ -21,6 +25,18 @@ run the following commands to install all packages
     npm i
     cd front-end
     npm i
+
+---
+
+## Version Requirements
+
+node.js - v20.14.0
+jsonwebtoken: v9.0.2
+mongodb": v6.10.0
+mongoose: v8.8.1
+socket.io: v4.8.1
+
+---
 
 ## Further Improvements
 
