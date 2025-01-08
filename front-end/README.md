@@ -1,8 +1,9 @@
-# React + Vite
+# Jiffy Chat Instant Messenger
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An instant messenger application built using React, Node, Express, MongoDb and SocketIo. Users can start conversations with anybody in the database and create group chats with multiple users, sending and receiving text based messages in real time.
 
-Currently, two official plugins are available:
+## Installation
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+    npm i
+    cd front-end
+    npm i
