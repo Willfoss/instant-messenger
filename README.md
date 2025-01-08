@@ -31,9 +31,13 @@ run the following commands to install all packages
 ## Version Requirements
 
 node.js - v20.14.0
+
 jsonwebtoken: v9.0.2
+
 mongodb": v6.10.0
-mongoose: v8.8.1
+
+mongoose: v8.8.
+
 socket.io: v4.8.1
 
 ---
