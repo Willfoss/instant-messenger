@@ -34,7 +34,7 @@ node.js - v20.14.0
 
 jsonwebtoken: v9.0.2
 
-mongodb": v6.10.0
+mongodb: v6.10.0
 
 mongoose: v8.8.
 
