@@ -44,4 +44,4 @@ socket.io: v4.8.1
 
 ## Further Improvements
 
-currently only the messages themselves are in real time. Notifications do not yet exist in the back end and are only present during a login session in the front end. The next step involves adding notifications to the back end and having these render in real time using socketIo
+currently only the messages themselves are in real time. Notifications do not yet exist in the back end and are only present during a login session in the front end. The notifications also require the whole page to rerender as opposed to appearing in real time. The next step involves adding notifications to the back end and having these render in real time using socketIo
